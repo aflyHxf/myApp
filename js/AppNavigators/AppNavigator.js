@@ -1,9 +1,10 @@
+import { connect } from 'react-redux'
+import { createReactNavigationReduxMiddleware, createReduxContainer } from 'react-navigation-redux-helpers'
 import { createAppContainer, createStackNavigator, createSwitchNavigator } from 'react-navigation'
 import HomePage from '../pages/HomePage';
 import WelcomePage from '../pages/WelcomePage';
 import DetailPage from '../pages/DetailPage';
-import { connect } from 'react-redux'
-import { createReactNavigationReduxMiddleware, createReduxContainer } from 'react-navigation-redux-helpers'
+import FecthDemoPage from '../pages/FecthDemoPage';
 
 export const rootCom = 'Init';//设置根路由
 
@@ -25,6 +26,12 @@ const MainNavigator = createStackNavigator({
     },
     DetailPage: {
         screen: DetailPage,
+        navigationOptions: {
+            // header: null
+        }
+    },
+    FecthPage: {
+        screen: FecthDemoPage,
         navigationOptions: {
             // header: null
         }

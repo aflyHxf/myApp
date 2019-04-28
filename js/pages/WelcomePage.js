@@ -13,9 +13,9 @@ import NavigationUtil from '../AppNavigators/NavigationUtil';
 export default class WelcomePage extends Component {
   componentDidMount() {
     const { navigation } = this.props
+    NavigationUtil.initNavigation(navigation)
     this.timer = setTimeout(() => {
-      NavigationUtil.resetToHomePage({ navigation })
-      NavigationUtil.navigation = navigation
+      NavigationUtil.resetToHomePage()
     }, 200)
   }
 

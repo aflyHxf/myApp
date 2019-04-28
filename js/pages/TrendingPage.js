@@ -10,6 +10,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { connect } from 'react-redux'
 import actions from '../action';
+import NavigationUtil from '../AppNavigators/NavigationUtil';
 
 class TrendingPage extends Component {
   render() {
@@ -19,6 +20,7 @@ class TrendingPage extends Component {
         <Text style={styles.welcome}>TrendingPage!</Text>
         <Button title={'改变主题色（红）'}
           onPress={() => this.props.onThemeChange('red')} />
+        <Button title={'Fecth网络请求'} onPress={() => NavigationUtil.goPage('FecthPage')} />
       </View>
     );
   }
