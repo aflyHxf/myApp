@@ -2,25 +2,25 @@ import Types from '../types'
 import DataStore from '../../expand/Dao/DataStore';
 
 // 获取最热数据的异步action
-export function onLoadPopularData(storeName, url, pageSize) {
+export function onRefreshPopular(storeName, url, pageSize) {
     return dispatch => {
         dispatch({ type: Types.POPULAR_REFRESH, storeName })
         const dataStore = new DataStore()
         dataStore.fetchData(url).then(res => { // 异步action 流
             handleData(dispatch, storeName, res, pageSize)
         }).catch(error => {
-            console.log(error)
             dispatch({ type: Types.POPULAR_REFRESH_FAIL, storeName, error })
         })
     }
 }
+
 
 export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = [], callback) {
     return dispatch => {
         setTimeout(() => { // 模拟网络请求
             if ((pageIndex - 1) * pageSize >= dataArray.length) {
                 if (typeof callback === 'function') {
-                    callback('no more')
+                    callback()
                 }
                 dispatch({
                     type: Types.POPULAR_LOAD_MORE_FAIL,
@@ -42,11 +42,16 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
     }
 }
 
-function handleData(dispatch, storeName, data,pageSize) {
-    
+function handleData(dispatch, storeName, data, pageSize) {
+    let fixItems = []
+    if (data && data.items) {
+        fixItems = data.items
+    }
     dispatch({
         type: Types.POPULAR_REFRESH_SUCCESS,
-        items: data && data.items,
-        storeName
+        items: fixItems,
+        projectModes: pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize),
+        storeName,
+        pageIndex: 1
     })
 }

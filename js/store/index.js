@@ -9,9 +9,8 @@ const logger = store => next => action => {
     } else {
         console.log('dispatch ', action)
     }
-    const result = next(action)
     console.log('nextState ', store.getState())
-    return result
+    return next(action)
 }
 
 const middlewares = [middleware, thunk, logger]

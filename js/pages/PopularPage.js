@@ -7,11 +7,13 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, RefreshControl, FlatList } from 'react-native';
+import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
-import PopularItem from './../common/PopularItem'
+import Toast from 'react-native-easy-toast'
+import PopularItem from '../common/PopularItem'
 import { connect } from 'react-redux'
 import actions from '../action'
+
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STAR = '&sort=star'
 const THEME_COLOR = 'red'
@@ -55,21 +57,27 @@ export default class PopularPage extends Component {
   }
 }
 
-
+const pageSize = 10
 class PopularTab extends React.Component {
   constructor(props) {
     super(props)
-    const { tabLabel } = this.props
-    this.storeName = tabLabel
+    this.storeName = this.props.tabLabel
   }
   componentDidMount() {
     this.loadData()
   }
-  loadData() {
-    const { onLoadPopularData } = this.props
+  loadData(loadMore) {
+    const { onRefreshPopular, onLoadMorePopular } = this.props
+    const store = this._store();
     // 生成url
     const url = this._genFecth(this.storeName)
-    onLoadPopularData(this.storeName, url)
+    if (loadMore) {
+      onLoadMorePopular(this.storeName, store.pageIndex++, pageSize, store.items, () => {
+        this.refs.toast.show('没有更多了')
+      })
+    } else {
+      onRefreshPopular(this.storeName, url, pageSize)
+    }
   }
 
   _genFecth(key) {
@@ -78,7 +86,7 @@ class PopularTab extends React.Component {
 
   _renderItem(data) {
     const { item } = data
-    return <View style={{ marginBottom: 10 }}>
+    return <View style={{ marginBottom: 2 }}>
       <PopularItem item={item} />
     </View>
   }
@@ -95,11 +103,18 @@ class PopularTab extends React.Component {
     }
     return store;
   }
+  _genIndicator(store) {
+    return store.hideLoadingMore ? null : <View style={styles.indicatorContainer}>
+      <ActivityIndicator style={styles.indicator} />
+      <Text>加载更多</Text>
+    </View>
+  }
   render() {
     let store = this._store();
+    console.log(store, 888888)
     return (
       <View style={styles.container}>
-        <FlatList data={store.items}
+        <FlatList data={store.projectModes}
           renderItem={data => this._renderItem(data)}
           keyExtractor={item => '' + item.id}
           refreshControl={
@@ -108,11 +123,21 @@ class PopularTab extends React.Component {
               titleColor={THEME_COLOR}
               colors={[THEME_COLOR]}
               refreshing={store.isLoading}
-              onRefresh={() => this.loadData()}
+              onRefresh={() => {
+                if (this.canLoadMore) {
+                  this.loadData(true)
+                  this.canLoadMore = false
+                }
+              }}
               tintColor={THEME_COLOR}
             />
           }
+          ListFooterComponent={this._genIndicator(store)}
+          onEndReached={() => { this.loadData(true) }}
+          onEndReachedThreshold={0.5}
+          onMomentumScrollBegin={() => this.canLoadMore = true}
         />
+        <Toast ref={'toast'} position={'center'} />
       </View>
     )
   }
@@ -123,7 +148,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  onLoadPopularData: (storeName, url) => dispatch(actions.onLoadPopularData(storeName, url))
+  onRefreshPopular: (storeName, url, pageSize) => dispatch(actions.onRefreshPopular(storeName, url, pageSize)),
+  onLoadMorePopular: (storeName, pageIndex, pageSize, items, callback) => dispatch(actions.onLoadMorePopular(storeName, pageIndex, pageSize, items, callback))
 })
 
 const PopularTabPage = connect(mapStateToProps, mapDispatchToProps)(PopularTab)
@@ -137,11 +163,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  },
   tabStyle: {
     minWidth: 50
   },
@@ -153,5 +174,12 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 6,
     marginBottom: 6
+  },
+  indicatorContainer: {
+    alignItems: "center"
+  },
+  indicator: {
+    color: 'red',
+    margin: 10
   }
 });

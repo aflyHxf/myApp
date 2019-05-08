@@ -5,6 +5,7 @@ import AppNavigator from './AppNavigators/AppNavigator';
 
 export default class App extends Component {
   render() {
+    console.log(store)
     return (
       <Provider store={store}>
         <AppNavigator />
