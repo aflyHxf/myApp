@@ -72,8 +72,8 @@ class PopularTab extends React.Component {
     // 生成url
     const url = this._genFecth(this.storeName)
     if (loadMore) {
-      onLoadMorePopular(this.storeName, store.pageIndex++, pageSize, store.items, () => {
-        this.refs.toast.show('没有更多了')
+      onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, callback => {
+        this.refs.toast.show('没有更多了');
       })
     } else {
       onRefreshPopular(this.storeName, url, pageSize)
@@ -103,18 +103,17 @@ class PopularTab extends React.Component {
     }
     return store;
   }
-  _genIndicator(store) {
-    return store.hideLoadingMore ? null : <View style={styles.indicatorContainer}>
+  _genIndicator() {
+    return this._store().hideLoadingMore ? null : <View style={styles.indicatorContainer}>
       <ActivityIndicator style={styles.indicator} />
       <Text>加载更多</Text>
     </View>
   }
   render() {
     let store = this._store();
-    console.log(store, 888888)
     return (
       <View style={styles.container}>
-        <FlatList data={store.projectModes}
+        <FlatList data={store.projectModels}
           renderItem={data => this._renderItem(data)}
           keyExtractor={item => '' + item.id}
           refreshControl={
@@ -123,19 +122,25 @@ class PopularTab extends React.Component {
               titleColor={THEME_COLOR}
               colors={[THEME_COLOR]}
               refreshing={store.isLoading}
-              onRefresh={() => {
-                if (this.canLoadMore) {
-                  this.loadData(true)
-                  this.canLoadMore = false
-                }
-              }}
+              onRefresh={() => this.loadData()}
               tintColor={THEME_COLOR}
             />
           }
-          ListFooterComponent={this._genIndicator(store)}
-          onEndReached={() => { this.loadData(true) }}
+          ListFooterComponent={() => this._genIndicator()}
+          onEndReached={() => {
+            console.log('---onEndReached----');
+            setTimeout(() => {
+              if (this.canLoadMore) {//fix 滚动时两次调用onEndReached https://github.com/facebook/react-native/issues/14015
+                this.loadData(true);
+                this.canLoadMore = false;
+              }
+            }, 100);
+          }}
           onEndReachedThreshold={0.5}
-          onMomentumScrollBegin={() => this.canLoadMore = true}
+          onMomentumScrollBegin={() => {
+            this.canLoadMore = true; //fix 初始化时页调用onEndReached的问题
+            console.log('---onMomentumScrollBegin-----')
+          }}
         />
         <Toast ref={'toast'} position={'center'} />
       </View>

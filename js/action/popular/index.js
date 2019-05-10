@@ -20,14 +20,14 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
         setTimeout(() => { // 模拟网络请求
             if ((pageIndex - 1) * pageSize >= dataArray.length) {
                 if (typeof callback === 'function') {
-                    callback()
+                    callback('no more')
                 }
                 dispatch({
                     type: Types.POPULAR_LOAD_MORE_FAIL,
                     error: 'no more',
                     storeName,
                     pageIndex: pageIndex--,
-                    projectModes: dataArray
+                    projectModels: dataArray
                 })
             } else {
                 const max = pageIndex * pageSize > dataArray.length ? dataArray.length : pageIndex * pageSize
@@ -35,7 +35,7 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
                     type: Types.POPULAR_LOAD_MORE_SUCCESS,
                     storeName,
                     pageIndex,
-                    projectModes: dataArray.slice(0, max)
+                    projectModels: dataArray.slice(0, max)
                 })
             }
         }, 500)
@@ -50,7 +50,7 @@ function handleData(dispatch, storeName, data, pageSize) {
     dispatch({
         type: Types.POPULAR_REFRESH_SUCCESS,
         items: fixItems,
-        projectModes: pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize),
+        projectModels: pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize),
         storeName,
         pageIndex: 1
     })
