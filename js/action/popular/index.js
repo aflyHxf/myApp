@@ -44,8 +44,8 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
 
 function handleData(dispatch, storeName, data, pageSize) {
     let fixItems = []
-    if (data && data.items) {
-        fixItems = data.items
+    if (data && data.data && data.data.items) {
+        fixItems = data.data.items
     }
     dispatch({
         type: Types.POPULAR_REFRESH_SUCCESS,

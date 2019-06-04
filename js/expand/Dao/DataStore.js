@@ -11,17 +11,19 @@ export default class DataStore {
      */
     fetchData(url) {
         // 清空本地的缓存数据 （仅仅测试用）
-        // AsyncStorage.clear().then(()=>console.log('本地数据已经清空'))
+        // AsyncStorage.clear().then(() => console.log('本地数据已经清空'))
         return new Promise((resolve, reject) => {
-            this.fetchLoaclData(url).then(wrapData => {
+            this.fetchLocalData(url).then(wrapData => {
                 if (wrapData && this._checkValidateTimes(wrapData.timestamp)) {
-                    resolve(wrapData.data)
+                    resolve(wrapData)
                 } else {
-                    this.fetchNetData(url).then(data => {
-                        resolve(this._wrapData(data))
-                    }).catch(error => reject(error))
+                    this.fetchNetData(url).then((data) => {
+                        resolve(this._wrapData(data));
+                    }).catch((error) => {
+                        reject(error);
+                    })
                 }
-            }).catch(error => {
+            }).catch(() => {
                 this.fetchNetData(url).then(data => {
                     resolve(this._wrapData(data))
                 }).catch(error => reject(error))
@@ -39,10 +41,10 @@ export default class DataStore {
     }
 
     /**
-     * fetchLoaclData 获取本地的数据
+     * fetchLocalData 获取本地的数据
      * @param {*} url 
      */
-    fetchLoaclData(url) {
+    fetchLocalData(url) {
         return new Promise((resolve, reject) => {
             AsyncStorage.getItem(url, (error, result) => {
                 if (!error) {
@@ -50,7 +52,7 @@ export default class DataStore {
                         resolve(JSON.parse(result))
                     } catch (e) {
                         reject(e)
-                        console.error(e)
+                        console.log(e)
                     }
                 } else {
                     reject(error)
@@ -69,13 +71,13 @@ export default class DataStore {
         return new Promise((resolve, reject) => {
             fetch(url).then(response => {
                 if (response.ok) {
-                    return response.json()
+                    return response.json();
                 }
                 throw new Error('network response was not ok')
             }).then(responseData => {
                 // 网络请求数据回来之后，先存在本地
                 this.saveData(url, responseData)
-                resolve(responseData)
+                resolve(responseData);
             }).catch(error => console.log(error))
         })
     }
@@ -83,7 +85,7 @@ export default class DataStore {
      * 给保存的数据加一个时间戳
      *  */
     _wrapData(data) {
-        return { data, timestamp: new Date().getTime() }
+        return { data: data, timestamp: new Date().getTime() }
     }
 
     /**

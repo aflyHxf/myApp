@@ -7,7 +7,7 @@ const initState = {
  * popular :{
  *      java: {
  *          items:[],
- *          isLoading:
+ *          isLoading: 
  *      }
  * }
  * @param {*} state 
@@ -46,7 +46,7 @@ export default function onAction(state = initState, action) {
             }
         case Types.POPULAR_LOAD_MORE_SUCCESS: // 上拉加载更多成功
             return {
-                ...state,//Object.assign @http://www.devio.org/2018/09/09/ES6-ES7-ES8-Feature/
+                ...state,//Object.assign  @http://www.devio.org/2018/09/09/ES6-ES7-ES8-Feature/
                 [action.storeName]: {
                     ...state[action.storeName],
                     projectModels: action.projectModels,
