@@ -1,7 +1,7 @@
-import { AsyncStorage } from 'react-native'
-
+import { AsyncStorage } from 'react-native';
+import Trending from 'GitHubTrending'
 const Validity = 4
-
+export const FLAG_STORAGE = { flag_popular: 'popular', flag_trending: 'trending' }
 export default class DataStore {
     /**
      * 获取缓存数据
@@ -9,7 +9,7 @@ export default class DataStore {
      * 2 否则 进行网络请求
      * @param {获取数据的请求地址} url 
      */
-    fetchData(url) {
+    fetchData(url, flag) {
         // 清空本地的缓存数据 （仅仅测试用）
         // AsyncStorage.clear().then(() => console.log('本地数据已经清空'))
         return new Promise((resolve, reject) => {
@@ -17,14 +17,14 @@ export default class DataStore {
                 if (wrapData && this._checkValidateTimes(wrapData.timestamp)) {
                     resolve(wrapData)
                 } else {
-                    this.fetchNetData(url).then((data) => {
+                    this.fetchNetData(url, flag).then((data) => {
                         resolve(this._wrapData(data));
                     }).catch((error) => {
                         reject(error);
                     })
                 }
             }).catch(() => {
-                this.fetchNetData(url).then(data => {
+                this.fetchNetData(url, flag).then(data => {
                     resolve(this._wrapData(data))
                 }).catch(error => reject(error))
             })
@@ -67,18 +67,30 @@ export default class DataStore {
      * @param {获取网络请求数据} data 
      */
 
-    fetchNetData(url) {
-        return new Promise((resolve, reject) => {
-            fetch(url).then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error('network response was not ok')
-            }).then(responseData => {
-                // 网络请求数据回来之后，先存在本地
-                this.saveData(url, responseData)
-                resolve(responseData);
-            }).catch(error => console.log(error))
+    fetchNetData(url, flag) {
+        return new Promise((resolve) => {
+            if (flag !== FLAG_STORAGE.flag_trending) {
+                fetch(url).then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('network response was not ok')
+                }).then(responseData => {
+                    // 网络请求数据回来之后，先存在本地
+                    this.saveData(url, responseData)
+                    resolve(responseData);
+                }).catch(error => console.log(error))
+            } else {
+                new Trending().fetchTrending(url).then(items => {
+                    if (!items) {
+                        throw new Error('response is null')
+                    }
+                    this.saveData(url, items)
+                    resolve(items)
+                }).catch(err => {
+                    reject(err)
+                })
+            }
         })
     }
     /**

@@ -1,13 +1,13 @@
 import Types from '../types'
-import DataStore from '../../expand/Dao/DataStore';
-
+import DataStore, { FLAG_STORAGE } from '../../expand/Dao/DataStore';
+import { handleData } from '../ActionUtil'
 // 获取最热数据的异步action
 export function onRefreshPopular(storeName, url, pageSize) {
     return dispatch => {
         dispatch({ type: Types.POPULAR_REFRESH, storeName })
         const dataStore = new DataStore()
-        dataStore.fetchData(url).then(res => { // 异步action 流
-            handleData(dispatch, storeName, res, pageSize)
+        dataStore.fetchData(url, FLAG_STORAGE.flag_popular).then(res => { // 异步action 流
+            handleData(Types.TRENDING_REFRESH_SUCCESS, dispatch, storeName, res, pageSize)
         }).catch(error => {
             dispatch({ type: Types.POPULAR_REFRESH_FAIL, storeName, error })
         })
@@ -40,18 +40,4 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
             }
         }, 500)
     }
-}
-
-function handleData(dispatch, storeName, data, pageSize) {
-    let fixItems = []
-    if (data && data.data && data.data.items) {
-        fixItems = data.data.items
-    }
-    dispatch({
-        type: Types.POPULAR_REFRESH_SUCCESS,
-        items: fixItems,
-        projectModels: pageSize > fixItems.length ? fixItems : fixItems.slice(0, pageSize),
-        storeName,
-        pageIndex: 1
-    })
 }
