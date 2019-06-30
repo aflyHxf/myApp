@@ -102,6 +102,7 @@ class PopularTab extends React.Component {
       <PopularItem item={item} />
     </View>
   }
+
   _store() {
     const { popular } = this.props;
     let store = popular[this.storeName];

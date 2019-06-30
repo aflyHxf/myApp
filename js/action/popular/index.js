@@ -7,7 +7,7 @@ export function onRefreshPopular(storeName, url, pageSize) {
         dispatch({ type: Types.POPULAR_REFRESH, storeName })
         const dataStore = new DataStore()
         dataStore.fetchData(url, FLAG_STORAGE.flag_popular).then(res => { // 异步action 流
-            handleData(Types.TRENDING_REFRESH_SUCCESS, dispatch, storeName, res, pageSize)
+            handleData(Types.POPULAR_REFRESH_SUCCESS, dispatch, storeName, res, pageSize)
         }).catch(error => {
             dispatch({ type: Types.POPULAR_REFRESH_FAIL, storeName, error })
         })

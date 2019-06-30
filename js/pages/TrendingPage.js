@@ -10,19 +10,19 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
-import TrendingItem from '../common/PopularItem'
+import PopularItem from '../common/PopularItem'
 import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
 
-const URL = 'https://github.com/trending/';
+const URL = 'https://github.com/trending';
 const QUERY_STAR = '?since=daily'
 const THEME_COLOR = '#678'
 
 export default class TrendingPage extends Component {
   constructor(props) {
     super(props)
-    this.tabName = ['All', 'C', 'C#', 'PHP', 'JavaScript']
+    this.tabName = ['all', 'java', 'c++', 'php', 'html', 'javascript']
   }
 
   _renderTabs() {
@@ -93,13 +93,18 @@ class TrendingTab extends React.Component {
   }
 
   _genFecth(key) {
-    return URL + key + QUERY_STAR
+    if (key === 'all') {
+      key = '';
+      return URL + key + QUERY_STAR
+    }
+    return URL + '/' + key + QUERY_STAR
   }
 
   _renderItem(data) {
+    console.log(data, 9999999999)
     const { item } = data
     return <View style={{ marginBottom: 2 }}>
-      <TrendingItem item={item} />
+      <PopularItem item={item} />
     </View>
   }
   _store() {
@@ -127,7 +132,7 @@ class TrendingTab extends React.Component {
       <View style={styles.container}>
         <FlatList data={store.projectModels}
           renderItem={data => this._renderItem(data)}
-          keyExtractor={item => '' + item.id}
+          keyExtractor={item => item.forkCount}
           refreshControl={
             <RefreshControl
               title={'loading'}
