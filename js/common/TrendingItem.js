@@ -1,6 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import HTMLView from 'react-native-htmlview';
 
 class FavoriteButton extends React.Component {
     render() {
@@ -19,12 +20,20 @@ export default class TrendingItem extends React.Component {
     }
     render() {
         const { item } = this.props
+        const htmlContent = `<p>${item.description}</p>`
         return (
             <TouchableOpacity onPress={this.props.onSelect}>
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.fullName}</Text>
                     <Text style={styles.description}>{item.meta}</Text>
-                    <Text style={styles.description}>{item.description}</Text>
+                    <HTMLView
+                        value={htmlContent}
+                        onLinkPress={url => { }}
+                        stylesheet={{
+                            p: styles.description,
+                            a: styles.description
+                        }}
+                    />
                     <View style={styles.row}>
                         <View style={styles.row}>
                             <Text style={{ marginRight: 5 }}>Built By:</Text>

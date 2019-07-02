@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 import TrendingItem from '../common/TrendingItem'
@@ -54,14 +54,15 @@ export default class TrendingPage extends Component {
         upperCaseLabel: false,
         scrollEnabled: true,
         style: {
-          backgroundColor: THEME_COLOR
+          backgroundColor: THEME_COLOR,
+          height: 30
         },
         indicatorStyle: styles.indicatorStyle,
         labelStyle: styles.labelStyle
       }
     }))
     return (
-      <View style={{ flex: 1, marginTop: 30 }}>
+      <View style={{ flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0 }}>
         {navigationBar}
         <TopNavigations />
       </View>
@@ -175,8 +176,6 @@ const mapDispatchToProps = dispatch => ({
 
 const TrendingTabPage = connect(mapStateToProps, mapDispatchToProps)(TrendingTab)
 
-
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -185,16 +184,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#F5FCFF',
   },
   tabStyle: {
-    minWidth: 50
+    padding: 0
   },
   indicatorStyle: {
     height: 2,
     backgroundColor: 'white'
   },
   labelStyle: {
-    fontSize: 13,
-    marginTop: 6,
-    marginBottom: 6
+    fontSize: 14,
+    margin: 0
   },
   indicatorContainer: {
     alignItems: "center"
