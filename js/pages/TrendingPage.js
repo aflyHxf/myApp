@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
-import PopularItem from '../common/PopularItem'
+import TrendingItem from '../common/TrendingItem'
 import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
@@ -101,10 +101,9 @@ class TrendingTab extends React.Component {
   }
 
   _renderItem(data) {
-    console.log(data, 9999999999)
     const { item } = data
     return <View style={{ marginBottom: 2 }}>
-      <PopularItem item={item} />
+      <TrendingItem item={item} />
     </View>
   }
   _store() {
@@ -132,7 +131,7 @@ class TrendingTab extends React.Component {
       <View style={styles.container}>
         <FlatList data={store.projectModels}
           renderItem={data => this._renderItem(data)}
-          keyExtractor={item => item.forkCount}
+          keyExtractor={item => '' + item.fullName}
           refreshControl={
             <RefreshControl
               title={'loading'}
