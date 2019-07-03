@@ -7,13 +7,15 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo } from 'react-native';
+import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 import TrendingItem from '../common/TrendingItem'
 import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
+import TrendingDialog, { TimeSpans } from '../common/TrendingDialog'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 
 const URL = 'https://github.com/trending';
 const QUERY_STAR = '?since=daily'
@@ -23,6 +25,9 @@ export default class TrendingPage extends Component {
   constructor(props) {
     super(props)
     this.tabName = ['all', 'java', 'c++', 'php', 'html', 'javascript']
+    this.state = {
+      timeSpan: TimeSpans[0]
+    }
   }
 
   _renderTabs() {
@@ -37,14 +42,42 @@ export default class TrendingPage extends Component {
     })
     return tabs
   }
+
+  renderTitleView() {
+    return <TouchableOpacity
+      underlayColor={'transparent'}
+      onPress={() => this.dialog.show()}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={{ fontSize: 18, color: '#fff', fontWeight: '400' }}>
+          趋势 {this.state.timeSpan.showText}</Text>
+        <MaterialIcons name={'arrow-drop-down'} size={22} color={'#fff'} />
+      </View>
+    </TouchableOpacity>
+  }
+
+  onSelectTimeSpan(tab) {
+    this.dialog.dismiss()
+    this.setState({
+      timeSpan: tab
+    })
+  }
+
+  randerTrendingDialog() {
+    return <TrendingDialog
+      ref={dialog => this.dialog = dialog}
+      onSelect={tab => this.onSelectTimeSpan(tab)}
+    />
+  }
+
   render() {
     const statusBar = {
       backgroundColor: THEME_COLOR,
       barStyle: 'light-content'
     }
+    // TrendingDialog
     const navigationBar =
       <NavigationBar
-        title={'趋势'}
+        titleView={this.renderTitleView()}
         statusBar={statusBar}
         style={{ backgroundColor: THEME_COLOR }}
       />
@@ -65,6 +98,7 @@ export default class TrendingPage extends Component {
       <View style={{ flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0 }}>
         {navigationBar}
         <TopNavigations />
+        {this.randerTrendingDialog()}
       </View>
     );
   }
