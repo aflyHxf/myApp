@@ -7,7 +7,17 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  RefreshControl,
+  FlatList,
+  ActivityIndicator,
+  DeviceInfo,
+  TouchableOpacity,
+  DeviceEventEmitter
+} from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 import TrendingItem from '../common/TrendingItem'
@@ -16,10 +26,11 @@ import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
 import TrendingDialog, { TimeSpans } from '../common/TrendingDialog'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+const EVENT_TYPE_TIME_SPAN_CHANGE = 'EVENT_TYPE_TIME_SPAN_CHANGE'
 
 const URL = 'https://github.com/trending';
-const QUERY_STAR = '?since=daily'
 const THEME_COLOR = '#678'
+const pageSize = 10
 
 export default class TrendingPage extends Component {
   constructor(props) {
@@ -34,7 +45,7 @@ export default class TrendingPage extends Component {
     const tabs = {}
     this.tabName.forEach((item, index) => {
       tabs[`tab${index}`] = {
-        screen: props => <TrendingTabPage {...props} tabLabel={item} />,
+        screen: props => <TrendingTabPage {...props} tabLabel={item} timeSpan={this.state.timeSpan}/>,
         navigationOptions: {
           title: item
         }
@@ -60,6 +71,7 @@ export default class TrendingPage extends Component {
     this.setState({
       timeSpan: tab
     })
+    DeviceEventEmitter.emit(EVENT_TYPE_TIME_SPAN_CHANGE, tab)
   }
 
   randerTrendingDialog() {
@@ -69,31 +81,37 @@ export default class TrendingPage extends Component {
     />
   }
 
+  _tabNav() {
+    if (!this.tabNav) {
+      this.tabNav = createAppContainer(createMaterialTopTabNavigator(this._renderTabs(), {
+        tabBarOptions: {
+          tabStyle: styles.tabStyle,
+          scrollEnabled: true,
+          style: {
+            backgroundColor: THEME_COLOR,
+            height: 30
+          },
+          indicatorStyle: styles.indicatorStyle,
+          labelStyle: styles.labelStyle
+        }
+      }))
+    }
+    return this.tabNav
+  }
+
   render() {
     const statusBar = {
       backgroundColor: THEME_COLOR,
       barStyle: 'light-content'
     }
-    // TrendingDialog
+
     const navigationBar =
       <NavigationBar
         titleView={this.renderTitleView()}
         statusBar={statusBar}
         style={{ backgroundColor: THEME_COLOR }}
       />
-    const TopNavigations = createAppContainer(createMaterialTopTabNavigator(this._renderTabs(), {
-      tabBarOptions: {
-        tabStyle: styles.tabStyle,
-        upperCaseLabel: false,
-        scrollEnabled: true,
-        style: {
-          backgroundColor: THEME_COLOR,
-          height: 30
-        },
-        indicatorStyle: styles.indicatorStyle,
-        labelStyle: styles.labelStyle
-      }
-    }))
+    const TopNavigations = this._tabNav()
     return (
       <View style={{ flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0 }}>
         {navigationBar}
@@ -104,15 +122,30 @@ export default class TrendingPage extends Component {
   }
 }
 
-const pageSize = 10
+
+
 class TrendingTab extends React.Component {
   constructor(props) {
     super(props)
-    this.storeName = this.props.tabLabel
+    const { tabLabel, timeSpan } = this.props
+    this.storeName = tabLabel
+    this.timeSpan = timeSpan
   }
+
   componentDidMount() {
     this.loadData()
+    this.timeSpanChangeListener = DeviceEventEmitter.addListener(EVENT_TYPE_TIME_SPAN_CHANGE, (timeSpan) => {
+      this.timeSpan = timeSpan
+      this.loadData()
+    })
   }
+
+  componentWillUnmount() {
+    if (this.timeSpanChangeListener) {
+      this.timeSpanChangeListener.remove()
+    }
+  }
+
   loadData(loadMore) {
     const { onRefreshTrending, onLoadMoreTrending } = this.props
     const store = this._store();
@@ -130,9 +163,9 @@ class TrendingTab extends React.Component {
   _genFecth(key) {
     if (key === 'all') {
       key = '';
-      return URL + key + QUERY_STAR
+      return URL + key + this.timeSpan.searchText
     }
-    return URL + '/' + key + QUERY_STAR
+    return URL + '/' + key + this.timeSpan.searchText
   }
 
   _renderItem(data) {

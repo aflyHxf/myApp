@@ -8,13 +8,27 @@
 
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-
+import NavigationBar from '../common/NavigationBar'
+import ViewUtil from '../util/ViewUtil';
 
 export default class DetailPage extends Component {
+  constructor(props) {
+    super(props)
+  }
+  onBack() {
+
+  }
+
   render() {
+    const navigationBar = <NavigationBar
+      leftButton={ViewUtil.getLeftBackButton(() => { this.onBack() })}
+      title={'最热'}
+      statusBar={statusBar}
+      style={{ backgroundColor: THEME_COLOR }}
+    />
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to DetailPage!</Text>
+        {navigationBar}
       </View>
     );
   }
