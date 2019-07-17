@@ -14,6 +14,7 @@ import PopularItem from '../common/PopularItem'
 import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
+import NavigationUtil from '../AppNavigators/NavigationUtil';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STAR = '&sort=star'
@@ -100,7 +101,9 @@ class PopularTab extends React.Component {
   _renderItem(data) {
     const { item } = data
     return <View style={{ marginBottom: 2 }}>
-      <PopularItem item={item} />
+      <PopularItem item={item} onSelect={() => {
+        NavigationUtil.goPage('DetailPage', { projectModel: item })
+      }} />
     </View>
   }
 

@@ -34,7 +34,7 @@ export default class NavigationUtil {
      * 返回上一页
      * @param {*} 
      */
-    static goBack() {
-        navigation.goBack()
+    static goBack(navigationItem) {
+        navigationItem.goBack()
     }
 }
