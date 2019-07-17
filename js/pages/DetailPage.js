@@ -9,6 +9,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, WebView, View, TouchableOpacity, DeviceInfo } from 'react-native';
 import NavigationBar from '../common/NavigationBar'
+import BackPressComponent from '../common/BackPressComponent'
 import ViewUtil from '../util/ViewUtil';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import NavigationUtil from '../AppNavigators/NavigationUtil';
@@ -27,7 +28,22 @@ export default class DetailPage extends Component {
       url: this.url,
       canGoBack: false
     }
+    this.backPress = new BackPressComponent({ backPress: () => this.onBackPress() })
   }
+
+  componentDidMount() {
+    this.backPress.componentDidMount()
+  }
+
+  componentWillUnmount() {
+    this.backPress.componentWillUnMount()
+  }
+
+  onBackPress() {
+    this.onBack()
+    return true
+  }
+
   onBack() {
     if (this.state.canGoBack) {
       this.webView.goBack()

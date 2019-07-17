@@ -45,7 +45,7 @@ export default class TrendingPage extends Component {
     const tabs = {}
     this.tabName.forEach((item, index) => {
       tabs[`tab${index}`] = {
-        screen: props => <TrendingTabPage {...props} tabLabel={item} timeSpan={this.state.timeSpan}/>,
+        screen: props => <TrendingTabPage {...props} tabLabel={item} timeSpan={this.state.timeSpan} />,
         navigationOptions: {
           title: item
         }
@@ -171,7 +171,9 @@ class TrendingTab extends React.Component {
   _renderItem(data) {
     const { item } = data
     return <View style={{ marginBottom: 2 }}>
-      <TrendingItem item={item} />
+      <TrendingItem item={item} onSelect={() => {
+        NavigationUtil.goPage('DetailPage', { projectModel: item })
+      }} />
     </View>
   }
   _store() {
