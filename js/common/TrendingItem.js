@@ -4,9 +4,6 @@ import BaseItem from './BaseItem'
 import HTMLView from 'react-native-htmlview';
 
 export default class TrendingItem extends BaseItem {
-    constructor(props) {
-        super(props)
-    }
     render() {
         const { projectModel } = this.props
         const { item } = projectModel

@@ -15,11 +15,14 @@ import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
 import NavigationUtil from '../AppNavigators/NavigationUtil';
+import FavoriteDao from '../expand/Dao/FavoriteDao'
+import { FLAG_STORAGE } from '../expand/Dao/DataStore';
+import FavoriteUtil from '../util/FavoriteUtils';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STAR = '&sort=star'
 const THEME_COLOR = '#678'
-
+const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
 export default class PopularPage extends Component {
   constructor(props) {
     super(props)
@@ -86,11 +89,11 @@ class PopularTab extends React.Component {
     // 生成url
     const url = this._genFecth(this.storeName)
     if (loadMore) {
-      onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, callback => {
+      onLoadMorePopular(this.storeName, ++store.pageIndex, pageSize, store.items, favoriteDao, callback => {
         this.refs.toast.show('没有更多了');
       })
     } else {
-      onRefreshPopular(this.storeName, url, pageSize)
+      onRefreshPopular(this.storeName, url, pageSize, favoriteDao)
     }
   }
 
@@ -99,11 +102,14 @@ class PopularTab extends React.Component {
   }
 
   _renderItem(data) {
+    console.log(data)
     const { item } = data
     return <View style={{ marginBottom: 2 }}>
-      <PopularItem item={item} onSelect={() => {
-        NavigationUtil.goPage('DetailPage', { projectModel: item })
-      }} />
+      <PopularItem
+        projectModel={item}
+        onSelect={() => { NavigationUtil.goPage('DetailPage', { projectModel: item }) }}
+        onFavorite={(item, isFavorite) => FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, FLAG_STORAGE.flag_popular)}
+      />
     </View>
   }
 
@@ -132,7 +138,7 @@ class PopularTab extends React.Component {
       <View style={styles.container}>
         <FlatList data={store.projectModels}
           renderItem={data => this._renderItem(data)}
-          keyExtractor={item => '' + item.id}
+          keyExtractor={item => '' + item.item.id}
           refreshControl={
             <RefreshControl
               title={'loading'}
@@ -170,8 +176,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  onRefreshPopular: (storeName, url, pageSize) => dispatch(actions.onRefreshPopular(storeName, url, pageSize)),
-  onLoadMorePopular: (storeName, pageIndex, pageSize, items, callback) => dispatch(actions.onLoadMorePopular(storeName, pageIndex, pageSize, items, callback))
+  onRefreshPopular: (storeName, url, pageSize, favoriteDao) => dispatch(actions.onRefreshPopular(storeName, url, pageSize, favoriteDao)),
+  onLoadMorePopular: (storeName, pageIndex, pageSize, items, favoriteDao, callback) => dispatch(actions.onLoadMorePopular(storeName, pageIndex, pageSize, items, favoriteDao, callback))
 })
 
 const PopularTabPage = connect(mapStateToProps, mapDispatchToProps)(PopularTab)

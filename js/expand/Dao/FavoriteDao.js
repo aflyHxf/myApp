@@ -45,7 +45,7 @@ export default class FavoriteDao {
     }
 
     /**
-     * 获取收藏的 Repository对应的key
+     * 获取收藏的 Repository 对应的key
      *  @return {Promise}
      */
     getFavoriteKeys() {

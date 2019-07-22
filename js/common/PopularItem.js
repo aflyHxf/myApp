@@ -3,9 +3,6 @@ import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native'
 import BaseItem from './BaseItem'
 
 export default class PopularItem extends BaseItem {
-    constructor(props) {
-        super(props)
-    }
     render() {
         const { projectModel } = this.props
         const { item } = projectModel
