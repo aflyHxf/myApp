@@ -23,7 +23,13 @@ export default class BaseItem extends React.Component {
         }
         return false
     }
-    
+
+    onItemClick() {
+        this.props.onSelect(isFavorite => {
+            this.setFavoriteState(isFavorite)
+        })
+    }
+
     setFavoriteState(isFavorite) {
         this.props.projectModel.isFavorite = isFavorite;
         this.setState({ isFavorite })

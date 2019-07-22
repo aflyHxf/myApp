@@ -102,12 +102,11 @@ class PopularTab extends React.Component {
   }
 
   _renderItem(data) {
-    console.log(data)
     const { item } = data
     return <View style={{ marginBottom: 2 }}>
       <PopularItem
         projectModel={item}
-        onSelect={() => { NavigationUtil.goPage('DetailPage', { projectModel: item }) }}
+        onSelect={() => { NavigationUtil.goPage('DetailPage', { projectModel: item, flag: FLAG_STORAGE.flag_popular }) }}
         onFavorite={(item, isFavorite) => FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, FLAG_STORAGE.flag_popular)}
       />
     </View>

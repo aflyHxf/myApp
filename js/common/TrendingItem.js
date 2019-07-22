@@ -9,7 +9,7 @@ export default class TrendingItem extends BaseItem {
         const { item } = projectModel
         const htmlContent = `<p>${item.description}</p>`
         return (
-            <TouchableOpacity onPress={this.props.onSelect}>
+            <TouchableOpacity onPress={() => this.onItemClick()}>
                 <View style={styles.container}>
                     <Text style={styles.title}>{item.fullName}</Text>
                     <Text style={styles.description}>{item.meta}</Text>
