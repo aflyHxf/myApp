@@ -53,3 +53,24 @@ export async function _projectModels(showItems, favoriteDao, callback) {
         callback(projectModels)
     }
 }
+
+/**
+ * 只是调用公共的代码字段，无实际功能作用
+ * @param {*} storeName 
+ * @param {*} pageIndex 
+ * @param {*} pageSize 
+ * @param {*} dataArray 
+ * @param {*} favoriteDao 
+ * @param {*} type 
+ */
+export function commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao, type) {
+    const max = pageIndex * pageSize > dataArray.length ? dataArray.length : pageIndex * pageSize
+    _projectModels(dataArray.slice(0, max), favoriteDao, projectModels => {
+        dispatch({
+            type,
+            storeName,
+            pageIndex,
+            projectModels
+        })
+    })
+}

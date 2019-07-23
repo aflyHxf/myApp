@@ -1,6 +1,6 @@
 import Types from '../types';
 import DataStore, { FLAG_STORAGE } from '../../expand/Dao/DataStore';
-import { handleData, _projectModels } from '../ActionUtil';
+import { handleData, commonFunc } from '../ActionUtil';
 // 获取最热数据的异步action
 export function onRefreshPopular(storeName, url, pageSize, favoriteDao) {
     return dispatch => {
@@ -29,16 +29,23 @@ export function onLoadMorePopular(storeName, pageIndex, pageSize, dataArray = []
                     pageIndex: pageIndex--
                 })
             } else {
-                const max = pageIndex * pageSize > dataArray.length ? dataArray.length : pageIndex * pageSize
-                _projectModels(dataArray.slice(0, max), favoriteDao, projectModels => {
-                    dispatch({
-                        type: Types.POPULAR_LOAD_MORE_SUCCESS,
-                        storeName,
-                        pageIndex,
-                        projectModels
-                    })
-                })
+                commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao, Types.POPULAR_LOAD_MORE_SUCCESS)
             }
         }, 500)
     }
 }
+
+/**
+ * 刷新收藏状态
+ * @param {*} storeName 
+ * @param {*} pageIndex 
+ * @param {*} pageSize 
+ * @param {*} dataArray 
+ * @param {*} favoriteDao 
+ */
+export function onFlushPopularFavorite(storeName, pageIndex, pageSize, dataArray = [], favoriteDao) {
+    return dispatch => {
+        commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao, Types.POPULAR_FLUSH_FAVORITE)
+    }
+}
+

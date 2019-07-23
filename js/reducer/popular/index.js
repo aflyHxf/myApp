@@ -63,6 +63,14 @@ export default function onAction(state = initState, action) {
                     pageIndex: action.pageIndex
                 }
             }
+        case Types.POPULAR_FLUSH_FAVORITE: // 刷新收藏状态
+            return {
+                ...state,
+                [action.storeName]: {
+                    ...state[action.storeName],
+                    projectModels: action.projectModels
+                }
+            }
         default:
             return state
     }

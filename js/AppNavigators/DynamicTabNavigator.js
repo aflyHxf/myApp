@@ -13,10 +13,10 @@ import TrendingPage from '../pages/TrendingPage';
 import FavoritePage from '../pages/FavoritePage';
 import MyPage from '../pages/MyPage';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import NavigationUtil from './NavigationUtil';
 import { createBottomTabNavigator, BottomTabBar } from 'react-navigation-tabs';
 import { connect } from 'react-redux'
-
+import EventBus from 'react-native-event-bus'
+import EventTypes from '../util/EventTypes'
 
 class DynamicTabNavigator extends Component {
     constructor(props) {
@@ -65,7 +65,14 @@ class DynamicTabNavigator extends Component {
     }
     render() {
         const Tab = this._renderTabNavigator()
-        return <Tab />
+        return <Tab
+            onNavigationStateChange={(prevState, newState, action) => {
+                EventBus.getInstance().fireEvent(EventTypes.botton_tab_select, {
+                    // 发送底部tab切换事件
+                    from: prevState.index,
+                    to: newState.index
+                })
+            }} />
     }
 }
 

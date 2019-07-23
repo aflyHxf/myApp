@@ -78,15 +78,14 @@ export default class FavoriteDao {
     /**
      * 获取所以收藏的项目
      */
-    getAllItem() {
+    getAllItems() {
         return new Promise((resolve, reject) => {
-            this.getFavoriteKeys().then(res => {
+            this.getFavoriteKeys().then(keys => {
                 let items = [];
-                if (res) {
-                    AsyncStorage.multiGet(key, (err, stores) => {
+                if (keys) {
+                    AsyncStorage.multiGet(keys, (err, stores) => {
                         try {
                             stores.map((result, i, store) => {
-                                let key = store[i][0]
                                 let value = store[i][1]
                                 if (value) items.push(JSON.parse(value))
                             })

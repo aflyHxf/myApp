@@ -1,8 +1,6 @@
 import Types from "../../action/types";
 
-const initState = {
-
-}
+const initState = {}
 /**
  * trending :{
  *      java: {
@@ -61,6 +59,14 @@ export default function onAction(state = initState, action) {
                     ...state[action.storeName],
                     hideLoadingMore: true,
                     pageIndex: action.pageIndex
+                }
+            }
+        case Types.TRENDING_FLUSH_FAVORITE: //  刷新收藏状态
+            return {
+                ...state,
+                [action.storeName]: {
+                    ...state[action.storeName],
+                    projectModels: action.projectModels
                 }
             }
         default:

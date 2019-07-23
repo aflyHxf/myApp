@@ -1,6 +1,6 @@
 import Types from '../types'
 import DataStore, { FLAG_STORAGE } from '../../expand/Dao/DataStore';
-import { handleData, _projectModels } from '../ActionUtil'
+import { handleData, commonFunc } from '../ActionUtil'
 
 // 获取最热数据的异步action
 export function onRefreshTrending(storeName, url, pageSize, favoriteDao) {
@@ -30,16 +30,15 @@ export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray = [
                     pageIndex: pageIndex--
                 })
             } else {
-                const max = pageIndex * pageSize > dataArray.length ? dataArray.length : pageIndex * pageSize
-                _projectModels(dataArray.slice(0, max), favoriteDao, projectModels => {
-                    dispatch({
-                        type: Types.TRENDING_LOAD_MORE_SUCCESS,
-                        storeName,
-                        pageIndex,
-                        projectModels
-                    })
-                })
+                commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao)
             }
         }, 500)
+    }
+}
+
+
+export function onFlushTrendingFavorite(storeName, pageIndex, pageSize, dataArray = [], favoriteDao) {
+    return dispatch => {
+        commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao)
     }
 }
