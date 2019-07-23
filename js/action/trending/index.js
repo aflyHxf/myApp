@@ -30,7 +30,7 @@ export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray = [
                     pageIndex: pageIndex--
                 })
             } else {
-                commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao)
+                commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao, Types.TRENDING_LOAD_MORE_SUCCESS)
             }
         }, 500)
     }
@@ -39,6 +39,6 @@ export function onLoadMoreTrending(storeName, pageIndex, pageSize, dataArray = [
 
 export function onFlushTrendingFavorite(storeName, pageIndex, pageSize, dataArray = [], favoriteDao) {
     return dispatch => {
-        commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao)
+        commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, favoriteDao, Types.TRENDING_FLUSH_FAVORITE)
     }
 }

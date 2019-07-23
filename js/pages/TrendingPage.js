@@ -137,6 +137,7 @@ class TrendingTab extends React.Component {
     const { tabLabel, timeSpan } = this.props
     this.storeName = tabLabel
     this.timeSpan = timeSpan
+    this.isFavoriteChanged = false
   }
 
   componentDidMount() {
@@ -145,7 +146,7 @@ class TrendingTab extends React.Component {
       this.timeSpan = timeSpan
       this.loadData()
     })
-    EventBus.getInstance().addListener(EventTypes.favorite_change_popular, this.favoriteChangeListener = data => {
+    EventBus.getInstance().addListener(EventTypes.favorite_change_trending, this.favoriteChangeListener = data => {
       // handle the event
       this.isFavoriteChanged = true
     })
@@ -263,7 +264,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onRefreshTrending: (storeName, url, pageSize, favoriteDao) => dispatch(actions.onRefreshTrending(storeName, url, pageSize, favoriteDao)),
   onLoadMoreTrending: (storeName, pageIndex, pageSize, items, favoriteDao, callback) => dispatch(actions.onLoadMoreTrending(storeName, pageIndex, pageSize, items, favoriteDao, callback)),
-  onFlushTrendingFavorite: (storeName, pageIndex, pageSize, items, favoriteDao, callback) => dispatch(actions.onFlushTrendingFavorite(storeName, pageIndex, pageSize, items, favoriteDao)),
+  onFlushTrendingFavorite: (storeName, pageIndex, pageSize, items, favoriteDao) => dispatch(actions.onFlushTrendingFavorite(storeName, pageIndex, pageSize, items, favoriteDao)),
 })
 
 const TrendingTabPage = connect(mapStateToProps, mapDispatchToProps)(TrendingTab)

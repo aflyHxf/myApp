@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo } from 'react-native';
+import { StyleSheet, View, RefreshControl, FlatList, DeviceInfo } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 import PopularItem from '../common/PopularItem'
@@ -22,10 +22,7 @@ import TrendingItem from '../common/TrendingItem';
 import EventBus from 'react-native-event-bus';
 import EventTypes from '../util/EventTypes';
 
-const URL = 'https://api.github.com/search/repositories?q=';
-const QUERY_STAR = '&sort=star'
 const THEME_COLOR = '#678'
-const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
 export default class FavoritePage extends Component {
     constructor(props) {
         super(props)
@@ -45,13 +42,13 @@ export default class FavoritePage extends Component {
             />
         const TopNavigations = createAppContainer(createMaterialTopTabNavigator({
             'Popular': {
-                screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_popular} />,
+                screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_popular} />,//初始化Component时携带默认参数 @https://github.com/react-navigation/react-navigation/issues/2392
                 navigationOptions: {
                     title: '最热'
                 }
             },
             'Trending': {
-                screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_trending} />,
+                screen: props => <FavoriteTabPage {...props} flag={FLAG_STORAGE.flag_trending} />,//初始化Component时携带默认参数 @https://github.com/react-navigation/react-navigation/issues/2392
                 navigationOptions: {
                     title: '趋势'
                 }
@@ -77,11 +74,12 @@ export default class FavoritePage extends Component {
     }
 }
 
-const pageSize = 10
+
 class FavoriteTab extends React.Component {
     constructor(props) {
         super(props)
-        this.storeName = this.props.flag
+        const { flag } = this.props
+        this.storeName = flag
         this.favoriteDao = new FavoriteDao(this.storeName)
     }
     componentDidMount() {
@@ -104,7 +102,7 @@ class FavoriteTab extends React.Component {
     }
 
     onFavorite(item, isFavorite) {
-        FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, this.storeName)
+        FavoriteUtil.onFavorite(this.favoriteDao, item, isFavorite, this.storeName)
         if (this.storeName === FLAG_STORAGE.flag_popular) {
             EventBus.getInstance().fireEvent(EventTypes.favorite_change_popular)
         } else if (this.storeName === FLAG_STORAGE.flag_trending) {
@@ -143,7 +141,7 @@ class FavoriteTab extends React.Component {
             <View style={styles.container}>
                 <FlatList data={store.projectModels}
                     renderItem={data => this._renderItem(data)}
-                    keyExtractor={item => '' + item.item.id || item.item.fullName}
+                    keyExtractor={item => '' + (item.item.id || item.item.fullName)}
                     refreshControl={
                         <RefreshControl
                             title={'loading'}
