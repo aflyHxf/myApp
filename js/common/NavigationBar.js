@@ -18,7 +18,7 @@ export default class NavigationBar extends React.Component {
         style: ViewPropTypes.style,
         title: PropTypes.string,
         titleView: PropTypes.element,
-        titleLayoutStyle: PropTypes.style,
+        titleLayoutStyle: ViewPropTypes.style,
         hide: PropTypes.bool,
         statusBar: PropTypes.shape(StatusBarShape),
         rightButton: PropTypes.element,

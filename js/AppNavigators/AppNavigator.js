@@ -4,7 +4,7 @@ import { createAppContainer, createStackNavigator, createSwitchNavigator } from 
 import HomePage from '../pages/HomePage';
 import WelcomePage from '../pages/WelcomePage';
 import DetailPage from '../pages/DetailPage';
-import FecthDemoPage from '../pages/FecthDemoPage';
+import WebViewPage from '../pages/WebViewPage';
 
 export const rootCom = 'Init';//设置根路由
 
@@ -30,10 +30,10 @@ const MainNavigator = createStackNavigator({
             header: null
         }
     },
-    FecthPage: {
-        screen: FecthDemoPage,
+    WebViewPage: {
+        screen: WebViewPage,
         navigationOptions: {
-            // header: null
+            header: null
         }
     }
 })
