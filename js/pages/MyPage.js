@@ -13,7 +13,7 @@ import ViewUtil from '../util/ViewUtil';
 import NavigationUtil from '../AppNavigators/NavigationUtil';
 import MORE_MENU from '../common/MoreMenu';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import GlobalStyles from '../res/GlobalStyles';
+import GlobalStyles from '../res/style/GlobalStyles';
 
 const THEME_COLOR = '#678'
 export default class MyPage extends Component {
