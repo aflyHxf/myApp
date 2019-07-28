@@ -3,6 +3,7 @@ import theme from './theme'
 import popular from './popular'
 import trending from './trending'
 import favorite from './favorite'
+import language from './language'
 
 import { rootCom, RootNavigator } from '../AppNavigators/AppNavigator';
 
@@ -27,5 +28,6 @@ export default combineReducers({
   theme,
   popular,
   trending,
-  favorite
+  favorite,
+  language
 });

@@ -20,30 +20,56 @@ import { FLAG_STORAGE } from '../expand/Dao/DataStore';
 import FavoriteUtil from '../util/FavoriteUtils';
 import EventBus from 'react-native-event-bus';
 import EventTypes from '../util/EventTypes';
+import { FLAG_LANGUAGE } from '../expand/Dao/LanguageDao';
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STAR = '&sort=star'
 const THEME_COLOR = '#678'
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
-export default class PopularPage extends Component {
+class PopularPage extends Component {
     constructor(props) {
         super(props)
-        this.tabName = ['Java', 'Android', 'iOS', 'React', 'React-native', 'PHP']
+        const { onLoadLanguage } = this.props
+        onLoadLanguage(FLAG_LANGUAGE.flag_key)
     }
 
     _renderTabs() {
         const tabs = {}
-        this.tabName.forEach((item, index) => {
-            tabs[`tab${index}`] = {
-                screen: props => <PopularTabPage {...props} tabLabel={item} />,
-                navigationOptions: {
-                    title: item
+        const { keys } = this.props
+        keys.forEach((item, index) => {
+            if (item.checked) {
+                tabs[`tab${index}`] = {
+                    screen: props => <PopularTabPage {...props} tabLabel={item.name} />,
+                    navigationOptions: {
+                        title: item.name
+                    }
                 }
             }
+
         })
         return tabs
     }
+
+    _tabNav() {
+        if (!this.tabNav) {
+            this.tabNav = createAppContainer(createMaterialTopTabNavigator(this._renderTabs(), {
+                tabBarOptions: {
+                    tabStyle: styles.tabStyle,
+                    scrollEnabled: true,
+                    style: {
+                        backgroundColor: THEME_COLOR,
+                        height: 30
+                    },
+                    indicatorStyle: styles.indicatorStyle,
+                    labelStyle: styles.labelStyle
+                }
+            }))
+        }
+        return this.tabNav
+    }
+
     render() {
+        const { keys } = this.props
         const statusBar = {
             backgroundColor: THEME_COLOR,
             barStyle: 'light-content'
@@ -54,27 +80,25 @@ export default class PopularPage extends Component {
                 statusBar={statusBar}
                 style={{ backgroundColor: THEME_COLOR }}
             />
-        const TopNavigations = createAppContainer(createMaterialTopTabNavigator(this._renderTabs(), {
-            tabBarOptions: {
-                tabStyle: styles.tabStyle,
-                upperCaseLabel: false,
-                scrollEnabled: true,
-                style: {
-                    backgroundColor: THEME_COLOR,
-                    height: 30
-                },
-                indicatorStyle: styles.indicatorStyle,
-                labelStyle: styles.labelStyle
-            }
-        }))
+        const TopNavigations = keys.length ? this._tabNav() : null
+
         return (
             <View style={{ flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0 }}>
                 {navigationBar}
-                <TopNavigations />
+                {TopNavigations && <TopNavigations />}
             </View>
         );
     }
 }
+
+const mapPopularStateToProps = state => ({
+    keys: state.language.keys
+});
+const mapPopularDispatchToProps = dispatch => ({
+    onLoadLanguage: (flag) => dispatch(actions.onLoadLanguage(flag))
+});
+//注意：connect只是个function，并不应定非要放在export后面
+export default connect(mapPopularStateToProps, mapPopularDispatchToProps)(PopularPage);
 
 const pageSize = 10
 class PopularTab extends React.Component {
