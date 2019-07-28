@@ -26,7 +26,13 @@ export default class MyPage extends Component {
       case MORE_MENU.Tutorial:
         RouteName = 'WebViewPage'
         params.title = '教程'
-        params.url = 'https://www.google.com/'
+        params.url = 'https://coding.m.imooc.com/classindex.html?cid=304';
+        break;
+      case MORE_MENU.About:
+        RouteName = 'AboutPage'
+        break;
+      case MORE_MENU.About_Author:
+        RouteName = 'AboutMePage'
         break;
     }
     if (RouteName) {
@@ -60,6 +66,7 @@ export default class MyPage extends Component {
             <Ionicons name={'ios-arrow-forward'} size={16} style={{ marginRight: 10, alignSelf: 'center', color: THEME_COLOR }} />
           </TouchableOpacity>
           <View style={GlobalStyles.line} />
+          {/* 教程 */}
           {this.getItem(MORE_MENU.Tutorial)}
           {/* 趋势管理 */}
           <Text style={styles.groupTitle}>趋势管理</Text>
