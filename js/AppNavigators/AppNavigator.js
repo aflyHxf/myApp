@@ -5,6 +5,7 @@ import HomePage from '../pages/HomePage';
 import WelcomePage from '../pages/WelcomePage';
 import DetailPage from '../pages/DetailPage';
 import WebViewPage from '../pages/WebViewPage';
+import CustomKeyPage from '../pages/CustomKeyPage';
 import AboutPage from '../pages/About/AboutPage';
 import AboutMePage from '../pages/About/AboutMePage'
 
@@ -46,6 +47,12 @@ const MainNavigator = createStackNavigator({
     },
     AboutMePage: {
         screen: AboutMePage,
+        navigationOptions: {
+            header: null
+        }
+    },
+    CustomKeyPage: {
+        screen: CustomKeyPage,
         navigationOptions: {
             header: null
         }
