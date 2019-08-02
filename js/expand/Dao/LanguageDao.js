@@ -1,5 +1,4 @@
 import React from 'react'
-import { } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
 import langs from '../../res/data/langs.json'
 import keys from '../../res/data/keys.json'
@@ -40,8 +39,6 @@ export default class LanguageDao {
      */
     save(objectData) {
         const stringData = JSON.stringify(objectData)
-        AsyncStorage.setItem(this.flag, stringData, (err, result) => {
-
-        })
+        AsyncStorage.setItem(this.flag, stringData, () => { })
     }
 }

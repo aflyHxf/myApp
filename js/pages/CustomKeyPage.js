@@ -7,25 +7,18 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo } from 'react-native';
-import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
-import Toast from 'react-native-easy-toast'
-import PopularItem from '../common/PopularItem'
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
 import NavigationUtil from '../AppNavigators/NavigationUtil';
-import FavoriteDao from '../expand/Dao/FavoriteDao'
-import { FLAG_STORAGE } from '../expand/Dao/DataStore';
-import FavoriteUtil from '../util/FavoriteUtils';
-import EventBus from 'react-native-event-bus';
-import EventTypes from '../util/EventTypes';
 import LanguageDao, { FLAG_LANGUAGE } from '../expand/Dao/LanguageDao';
 import BackPressComponent from '../common/BackPressComponent';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import ViewUtil from '../util/ViewUtil';
 import CheckBox from 'react-native-check-box'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import ArrayUtil from '../util/ArrayUtil';
 const THEME_COLOR = '#678'
 
 class CustomKeyPage extends Component {
@@ -95,10 +88,46 @@ class CustomKeyPage extends Component {
             <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>{text}</Text>
         </TouchableOpacity>
     }
-    onSave() { }
+    // 报错变更
+    onSave() {
+        if (this.changeValues.length === 0) {
+            NavigationUtil.goBack(this.props.navigation)
+        } else {
+            // 更新本地数据
+            this.languageDao.save(this.state.keys)
+            const { onLoadLanguage } = this.props
+            // 更新 store
+            onLoadLanguage(this.params.flag)
+            NavigationUtil.goBack(this.props.navigation)
+        }
+    }
 
     onClick(data, index) {
-      data.checked = !data.checked
+        data.checked = !data.checked
+        ArrayUtil.updateArray(this.changeValues, data)
+        this.state.keys[index] = data
+        this.setState({
+            keys: this.state.keys
+        })
+    }
+    onBack() {
+        if (this.changeValues.length > 0) {
+            Alert.alert('提示', '要保存修改吗？', [
+                {
+                    text: '否',
+                    onPress: () => {
+                        NavigationUtil.goBack(this.props.navigation)
+                    }
+                },
+                {
+                    text: '是',
+                    onPress: () => this.onSave()
+                }
+            ])
+        } else {
+            NavigationUtil.goBack(this.props.navigation)
+        }
+
     }
     _checkedImage(checked) {
         const { } = this.params
@@ -134,6 +163,7 @@ class CustomKeyPage extends Component {
         }
         return views
     }
+
     render() {
         let title = this.isRemoveKey ? '标签移除' : '自定义标签'
         title = this.params.flag === FLAG_LANGUAGE.flag_language ? '自定义语言' : title
@@ -143,7 +173,7 @@ class CustomKeyPage extends Component {
                 title={title}
                 style={{ backgroundColor: THEME_COLOR }}
                 rightButton={CustomKeyPage.getRightButtonText(rightButtonText, () => this.onSave())}
-                leftButton={ViewUtil.getLeftBackButton(() => NavigationUtil.goBack(this.props.navigation))}
+                leftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
             />;
         return <View style={styles.container}>
             {navigationBar}

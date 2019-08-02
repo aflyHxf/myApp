@@ -52,9 +52,14 @@ class TrendingPage extends Component {
     this.preKeys = []
   }
 
+  componentDidMount() {
+    console.log('走了这里吗？')
+  }
+
   _renderTabs() {
     const tabs = {}
     const { keys } = this.props
+
     this.preKeys = keys
     keys.forEach((item, index) => {
       if (item.checked) {
