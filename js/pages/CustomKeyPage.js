@@ -75,12 +75,12 @@ class CustomKeyPage extends Component {
         let key = flag === FLAG_LANGUAGE.flag_key ? "keys" : "languages";
         if (isRemoveKey && !original) {
             // //如果state中的keys为空则从props中取
-            // return state && state.keys && state.keys.length !== 0 && state.keys || props.language[key].map(val => {
-            //     return {//注意：不直接修改props，copy一份
-            //         ...val,
-            //         checked: false
-            //     };
-            // });
+            return state && state.keys && state.keys.length !== 0 && state.keys || props.language[key].map(val => {
+                return {//注意：不直接修改props，copy一份
+                    ...val,
+                    checked: false
+                };
+            });
         } else {
             return props.language[key];
         }
