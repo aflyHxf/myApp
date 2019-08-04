@@ -25,29 +25,29 @@ class CustomKeyPage extends Component {
     constructor(props) {
         super(props);
         this.params = this.props.navigation.state.params;
-        this.backPress = new BackPressComponent({ backPress: () => this.onBackPress() })
+        this.backPress = new BackPressComponent({ backPress: (e) => this.onBackPress(e) });
         this.changeValues = [];
-        this.isRemoveKey = !!this.params.isRemoveKey
-        this.languageDao = new LanguageDao(this.params.flag)
+        this.isRemoveKey = !!this.params.isRemoveKey;
+        this.languageDao = new LanguageDao(this.params.flag);
         this.state = {
             keys: []
         }
     }
 
     componentDidMount() {
-        // 如果props中的标签为空则从本地存储中读取
-        if (!CustomKeyPage._keys(this.props).langth) {
-            const { onLoadLanguage } = this.props
-            onLoadLanguage(this.params.flag)
+        this.backPress.componentDidMount();
+        //如果props中标签为空则从本地存储中获取标签
+        if (CustomKeyPage._keys(this.props).length === 0) {
+            let { onLoadLanguage } = this.props;
+            onLoadLanguage(this.params.flag);
         }
         this.setState({
-            keys: CustomKeyPage._keys(this.props)
+            keys: CustomKeyPage._keys(this.props),
         })
-        this.backPress.componentDidMount()
     }
 
     componentWillUnmount() {
-        this.backPress.componentWillUnMount()
+        this.backPress.componentWillUnMount();
     }
 
     onBackPress() {
@@ -58,28 +58,33 @@ class CustomKeyPage extends Component {
     static getDerivedStateFromProps(nextProps, prevState) {
         if (prevState.keys !== CustomKeyPage._keys(nextProps, null, prevState)) {
             return {
-                keys: CustomKeyPage._keys(nextProps, null, prevState)
+                keys: CustomKeyPage._keys(nextProps, null, prevState),
             }
         }
-        return false
+        return null;
     }
-
     /**
      * 获取标签
      * @param {*} props 
      * @param {*} original 移除标签时使用 是否从props获取原始的标签
      * @param {*} state 移除标签时使用
      */
-    static _keys(props, original, state) {
-        const { flag, isRemoveKey } = props.navigation.state.params
-        let key = flag === FLAG_LANGUAGE.flag_key ? 'keys' : 'languages'
-        if (isRemoveKey && !original) {
 
+    static _keys(props, original, state) {
+        const { flag, isRemoveKey } = props.navigation.state.params;
+        let key = flag === FLAG_LANGUAGE.flag_key ? "keys" : "languages";
+        if (isRemoveKey && !original) {
+            // //如果state中的keys为空则从props中取
+            // return state && state.keys && state.keys.length !== 0 && state.keys || props.language[key].map(val => {
+            //     return {//注意：不直接修改props，copy一份
+            //         ...val,
+            //         checked: false
+            //     };
+            // });
         } else {
-            return props.language[key]
+            return props.language[key];
         }
     }
-
 
 
     static getRightButtonText(text, callback) {
@@ -88,19 +93,28 @@ class CustomKeyPage extends Component {
             <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>{text}</Text>
         </TouchableOpacity>
     }
-    // 报错变更
+
+
+    //保存变更
     onSave() {
         if (this.changeValues.length === 0) {
-            NavigationUtil.goBack(this.props.navigation)
-        } else {
-            // 更新本地数据
-            this.languageDao.save(this.state.keys)
-            const { onLoadLanguage } = this.props
-            // 更新 store
-            onLoadLanguage(this.params.flag)
-            NavigationUtil.goBack(this.props.navigation)
+            NavigationUtil.goBack(this.props.navigation);
+            return;
         }
+        let keys;
+        if (this.isRemoveKey) {//移除标签的特殊处理
+            for (let i = 0, l = this.changeValues.length; i < l; i++) {
+                ArrayUtil.remove(keys = CustomKeyPage._keys(this.props, true), this.changeValues[i], "name");
+            }
+        }
+        //更新本地数据
+        this.languageDao.save(keys || this.state.keys);
+        const { onLoadLanguage } = this.props;
+        //更新store
+        onLoadLanguage(this.params.flag);
+        NavigationUtil.goBack(this.props.navigation);
     }
+
 
     onClick(data, index) {
         data.checked = !data.checked

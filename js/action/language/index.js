@@ -1,6 +1,4 @@
 import Types from '../types';
-import FavoriteDao from '../../expand/Dao/FavoriteDao';
-import ProjectModel from '../../model/ProjectModel';
 import LanguageDao from '../../expand/Dao/LanguageDao';
 
 /**

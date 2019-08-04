@@ -34,8 +34,8 @@ class PopularPage extends Component {
     }
 
     _renderTabs() {
-        const tabs = {}
-        const { keys } = this.props
+        const tabs = {};
+        const { keys } = this.props;
         keys.forEach((item, index) => {
             if (item.checked) {
                 tabs[`tab${index}`] = {
@@ -45,28 +45,26 @@ class PopularPage extends Component {
                     }
                 }
             }
-
-        })
-        return tabs
+        });
+        return tabs;
     }
 
     _tabNav() {
-        if (!this.tabNav) {
-            this.tabNav = createAppContainer(createMaterialTopTabNavigator(this._renderTabs(), {
+        return createAppContainer(createMaterialTopTabNavigator(
+            this._renderTabs(), {
                 tabBarOptions: {
                     tabStyle: styles.tabStyle,
-                    scrollEnabled: true,
+                    upperCaseLabel: false,//是否使标签大写，默认为true
+                    scrollEnabled: true,//是否支持 选项卡滚动，默认false
                     style: {
-                        backgroundColor: THEME_COLOR,
-                        height: 30
+                        backgroundColor: THEME_COLOR,//TabBar 的背景颜色
+                        height: 30//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
                     },
-                    indicatorStyle: styles.indicatorStyle,
-                    labelStyle: styles.labelStyle
+                    indicatorStyle: styles.indicatorStyle,//标签指示器的样式
+                    labelStyle: styles.labelStyle,//文字的样式
                 },
                 lazy: true
             }))
-        }
-        return this.tabNav
     }
 
     render() {

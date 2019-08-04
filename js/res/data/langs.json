@@ -6,46 +6,54 @@
       "checked": true
     },
     {
-      "path": "unknown",
-      "name": "Unknown",
+      "path": "cpp",
+      "name": "C++",
+      "checked": false
+    },
+    {
+      "path": "html",
+      "name": "HTML",
       "checked": true
     },
     {
-      "path": "as3",
-      "name": "ActionScript",
-      "short_name": "AS",
+      "path": "java",
+      "name": "Java",
+      "checked": true
+    },
+    {
+      "path": "javascript",
+      "short_name": "JS",
+      "name": "JavaScript",
+      "checked": true
+    },
+    {
+      "path": "php",
+      "name": "PHP",
+      "checked": true
+    },
+    {
+      "path": "ruby",
+      "name": "Ruby",
       "checked": false
     },
     {
-      "path": "apacheconf",
-      "name": "ApacheConf",
+      "path": "unknown",
+      "name": "Unknown",
       "checked": false
     },
     {
-      "path": "nasm",
-      "name": "Assembly",
-      "short_name": "NASM",
-      "checked": false
-    },
-    {
-      "path": "bat",
-      "name": "Batchfile",
-      "short_name": "BAT",
+      "path": "abap",
+      "name": "ABAP",
       "checked": false
     },
     {
       "path": "c",
       "name": "C",
-      "checked": false
+      "checked": true
     },
     {
       "path": "csharp",
       "name": "C#",
-      "checked": false
-    },
-    {
-      "path": "cpp",
-      "name": "C++",
       "checked": false
     },
     {
@@ -119,16 +127,11 @@
     {
       "path": "go",
       "name": "Go",
-      "checked": false
+      "checked": true
     },
     {
       "path": "groovy",
       "name": "Groovy",
-      "checked": false
-    },
-    {
-      "path": "html",
-      "name": "HTML",
       "checked": false
     },
     {
@@ -146,17 +149,6 @@
       "short_name": "Inno",
       "name": "Inno Setup",
       "checked": false
-    },
-    {
-      "path": "java",
-      "name": "Java",
-      "checked": true
-    },
-    {
-      "path": "javascript",
-      "short_name": "JS",
-      "name": "JavaScript",
-      "checked": true
     },
     {
       "path": "julia",
@@ -215,11 +207,6 @@
       "path": "objective-c%2B%2B",
       "name": "Objective-C++",
       "checked": false
-    },
-    {
-      "path": "php",
-      "name": "PHP",
-      "checked": true
     },
     {
       "path": "plsql",

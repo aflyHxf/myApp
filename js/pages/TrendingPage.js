@@ -44,34 +44,29 @@ const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_trending)
 class TrendingPage extends Component {
   constructor(props) {
     super(props)
-    const { onLoadLanguage } = this.props
-    onLoadLanguage(FLAG_LANGUAGE.flag_language)
     this.state = {
       timeSpan: TimeSpans[0]
     }
-    this.preKeys = []
+    const { onLoadLanguage } = this.props;
+    onLoadLanguage(FLAG_LANGUAGE.flag_language);
+    this.preKeys = [];
   }
 
-  componentDidMount() {
-    console.log('走了这里吗？')
-  }
-
-  _renderTabs() {
-    const tabs = {}
-    const { keys } = this.props
-
-    this.preKeys = keys
+  _genTabs() {
+    const tabs = {};
+    const { keys } = this.props;
+    this.preKeys = keys;
     keys.forEach((item, index) => {
       if (item.checked) {
         tabs[`tab${index}`] = {
-          screen: props => <TrendingTabPage {...props} tabLabel={item.name} timeSpan={this.state.timeSpan} />,
+          screen: props => <TrendingTabPage {...props} timeSpan={this.state.timeSpan} tabLabel={item.name} />,//初始化Component时携带默认参数 @https://github.com/react-navigation/react-navigation/issues/2392
           navigationOptions: {
             title: item.name
           }
         }
       }
-    })
-    return tabs
+    });
+    return tabs;
   }
 
   renderTitleView() {
@@ -102,22 +97,26 @@ class TrendingPage extends Component {
   }
 
   _tabNav() {
-    if (!this.tabNav || !ArrayUtil.isEqual(this.preKeys, this.props.keys)) {
-      this.tabNav = createAppContainer(createMaterialTopTabNavigator(this._renderTabs(), {
-        tabBarOptions: {
-          tabStyle: styles.tabStyle,
-          upperCaseLabel: false,
-          scrollEnabled: true,
-          style: {
-            backgroundColor: THEME_COLOR,
-            height: 30
+    //注意：主题发生变化需要重新渲染top tab
+    if (!this.tabNav || !ArrayUtil.isEqual(this.preKeys, this.props.keys)) {//优化效率：根据需要选择是否重新创建建TabNavigator，通常tab改变后才重新创建
+      this.tabNav = createAppContainer(createMaterialTopTabNavigator(
+        this._genTabs(), {
+          tabBarOptions: {
+            tabStyle: styles.tabStyle,
+            upperCaseLabel: false,//是否使标签大写，默认为true
+            scrollEnabled: true,//是否支持 选项卡滚动，默认false
+            style: {
+              backgroundColor: THEME_COLOR,//TabBar 的背景颜色
+              height: 30//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
+            },
+            indicatorStyle: styles.indicatorStyle,//标签指示器的样式
+            labelStyle: styles.labelStyle,//文字的样式
           },
-          indicatorStyle: styles.indicatorStyle,
-          labelStyle: styles.labelStyle
+          lazy: true
         }
-      }))
+      ));
     }
-    return this.tabNav
+    return this.tabNav;
   }
 
   render() {
@@ -193,6 +192,7 @@ class TrendingTab extends React.Component {
     const store = this._store();
     // 生成url
     const url = this._genFecth(this.storeName)
+    // const url = this._genFecth('java')
     if (loadMore) {
       onLoadMoreTrending(this.storeName, ++store.pageIndex, pageSize, store.items, favoriteDao, () => {
         this.refs.toast.show('没有更多了');
@@ -222,6 +222,7 @@ class TrendingTab extends React.Component {
       />
     </View>
   }
+
   _store() {
     const { trending } = this.props;
     let store = trending[this.storeName];
@@ -235,12 +236,14 @@ class TrendingTab extends React.Component {
     }
     return store;
   }
+
   _genIndicator() {
     return this._store().hideLoadingMore ? null : <View style={styles.indicatorContainer}>
       <ActivityIndicator style={styles.indicator} />
       <Text>加载更多</Text>
     </View>
   }
+
   render() {
     let store = this._store();
     return (
