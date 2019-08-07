@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, ScrollView, View, TouchableOpacity, DeviceInfo, Text } from 'react-native';
+import { StyleSheet, ScrollView, View, TouchableOpacity, Text } from 'react-native';
 import NavigationBar from '../common/NavigationBar'
 import ViewUtil from '../util/ViewUtil';
 import NavigationUtil from '../AppNavigators/NavigationUtil';
@@ -41,6 +41,11 @@ export default class MyPage extends Component {
         break;
       case MORE_MENU.About_Author:
         RouteName = 'AboutMePage'
+        break;
+      case MORE_MENU.Sort_Key:
+      case MORE_MENU.Sort_Language:
+        RouteName = 'SortKeyPage'
+        params.flag = menu === MORE_MENU.Sort_Key ? FLAG_LANGUAGE.flag_key : FLAG_LANGUAGE.flag_language
         break;
     }
     if (RouteName) {
