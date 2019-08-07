@@ -7,14 +7,13 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Alert } from 'react-native';
+import { StyleSheet, Text, View, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
 import NavigationUtil from '../AppNavigators/NavigationUtil';
 import LanguageDao, { FLAG_LANGUAGE } from '../expand/Dao/LanguageDao';
 import BackPressComponent from '../common/BackPressComponent';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import ViewUtil from '../util/ViewUtil';
 import CheckBox from 'react-native-check-box'
 import Ionicons from 'react-native-vector-icons/Ionicons'
