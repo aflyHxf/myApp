@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Alert, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Alert, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux'
 import actions from '../action'
 import NavigationBar from '../common/NavigationBar'
@@ -27,12 +27,11 @@ class RowComponent extends React.Component {
             <TouchableHighlight
                 underlayColor={'#eee'}
                 style={this.props.data.checked ? styles.item : styles.hidden}
-                {...this.props.sortHandlers}
-            >
+                {...this.props.sortHandlers}>
                 <View style={{ marginLeft: 10, flexDirection: 'row' }}>
                     <MaterialCommunityIcons name={'sort'} size={16} style={{ marginRight: 10, color: THEME_COLOR }} />
+                    <Text>{this.props.data.name}</Text>
                 </View>
-                <Text>{this.props.data.name}</Text>
             </TouchableHighlight>
         )
     }
@@ -47,6 +46,16 @@ class SortKeyPage extends Component {
         this.state = {
             checkedArray: SortKeyPage._keys(this.props)
         }
+    }
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const checkedArray = SortKeyPage._keys(nextProps, prevState);
+        if (prevState.checkedArray !== checkedArray) {
+            return {
+                checkedArray: checkedArray,
+            };
+        }
+        return null;
     }
 
     componentDidMount() {
@@ -67,15 +76,6 @@ class SortKeyPage extends Component {
         return true
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        const checkedArray = SortKeyPage._keys(nextProps, null, prevState)
-        if (prevState.keys !== checkedArray) {
-            return {
-                keys: checkedArray
-            }
-        }
-        return null;
-    }
     /**
      * 获取标签
      * @param {*} props 
@@ -103,6 +103,13 @@ class SortKeyPage extends Component {
         return flag === FLAG_LANGUAGE.flag_key ? 'keys' : 'languages'
     }
 
+    static getRightButtonText(text, callback) {
+        return <TouchableOpacity
+            style={{ alignItems: 'center' }} onPress={callback}>
+            <Text style={{ fontSize: 20, color: '#fff', marginRight: 10 }}>{text}</Text>
+        </TouchableOpacity>
+    }
+
     //保存变更
     onSave(hasChecked) {
         if (!hasChecked) {
@@ -114,15 +121,35 @@ class SortKeyPage extends Component {
         }
         // TODO: 保存排序后的数据
         //更新本地数据
-        this.languageDao.save();
+        this.languageDao.save(this.getSortResult());
         const { onLoadLanguage } = this.props;
         //更新store
         onLoadLanguage(this.params.flag);
         NavigationUtil.goBack(this.props.navigation);
     }
 
+    /**
+     * 获取排序后的标签结果
+     */
+    getSortResult() {
+        const flag = SortKeyPage._flag(this.props);
+        //从原始数据中复制一份数据出来，以便对这份数据进行进行排序
+        let sortResultArray = ArrayUtil.clone(this.props.language[flag]);
+        //获取排序之前的排列顺序
+        const originalCheckedArray = SortKeyPage._keys(this.props);
+        //遍历排序之前的数据，用排序后的数据checkedArray进行替换
+        for (let i = 0, j = originalCheckedArray.length; i < j; i++) {
+            let item = originalCheckedArray[i];
+            //找到要替换的元素所在位置
+            let index = this.props.language[flag].indexOf(item);
+            //进行替换
+            sortResultArray.splice(index, 1, this.state.checkedArray[i]);
+        }
+        return sortResultArray;
+    }
+
     onBack() {
-        if (this.changeValues.length > 0) {
+        if (!ArrayUtil.isEqual(SortKeyPage._keys(this.props, this.state.checkedArray))) {
             Alert.alert('提示', '要保存修改吗？', [
                 {
                     text: '否',
@@ -132,13 +159,12 @@ class SortKeyPage extends Component {
                 },
                 {
                     text: '是',
-                    onPress: () => this.onSave()
+                    onPress: () => this.onSave(true)
                 }
             ])
         } else {
             NavigationUtil.goBack(this.props.navigation)
         }
-
     }
 
     render() {
@@ -158,8 +184,8 @@ class SortKeyPage extends Component {
                 style={{ flex: 1 }}
                 data={order}
                 order={Object.keys(order)}
-                onRowMoved={e => {
-                    order.splice(e.to, 0, order.splice(e.from, 1)[0])
+                  onRowMoved={e => {
+                    this.state.checkedArray.splice(e.to, 0, this.state.checkedArray.splice(e.from, 1)[0])
                     this.forceUpdate()
                 }}
                 renderRow={row => <RowComponent data={row} {...this.params} />}
