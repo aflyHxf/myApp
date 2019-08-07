@@ -208,9 +208,6 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#F5FCFF'
     },
-    item: {
-        flexDirection: 'row'
-    },
     line: {
         height: 0.3,
         flex: 1,
