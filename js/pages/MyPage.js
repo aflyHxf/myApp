@@ -18,7 +18,6 @@ import { FLAG_LANGUAGE } from '../expand/Dao/LanguageDao';
 import actions from '../action';
 import { connect } from 'react-redux'
 
-const THEME_COLOR = '#678'
 class MyPage extends Component {
   constructor(props) {
     super(props)
@@ -61,18 +60,20 @@ class MyPage extends Component {
   }
 
   getItem(menu) {
-    return ViewUtil.getMenuItem(() => this.onClick(menu), menu, THEME_COLOR)
+    const { theme } = this.props
+    return ViewUtil.getMenuItem(() => this.onClick(menu), menu, theme.themeColor)
   }
   render() {
+    const { theme } = this.props
     const statusBar = {
-      backgroundColor: THEME_COLOR,
+      backgroundColor: theme.themeColor,
       barStyle: 'light-content'
     }
     const navigationBar =
       <NavigationBar
         title={'我的'}
         statusBar={statusBar}
-        style={{ backgroundColor: THEME_COLOR }}
+        style={theme.styles.navBar}
       />
     return (
       <View style={GlobalStyles.appContainer}>
@@ -80,10 +81,10 @@ class MyPage extends Component {
         <ScrollView>
           <TouchableOpacity onPress={() => { MyPage.onClick(MORE_MENU.About) }} style={styles.item}>
             <View style={styles.aboutLeft}>
-              <Ionicons name={MORE_MENU.About.icon} size={40} style={{ marginRight: 10, color: THEME_COLOR }} />
+              <Ionicons name={MORE_MENU.About.icon} size={40} style={{ marginRight: 10, color: theme.themeColor }} />
               <Text>Github Popular</Text>
             </View>
-            <Ionicons name={'ios-arrow-forward'} size={16} style={{ marginRight: 10, alignSelf: 'center', color: THEME_COLOR }} />
+            <Ionicons name={'ios-arrow-forward'} size={16} style={{ marginRight: 10, alignSelf: 'center', color: theme.themeColor }} />
           </TouchableOpacity>
           <View style={GlobalStyles.line} />
           {/* 教程 */}
