@@ -38,9 +38,9 @@ class HomePage extends Component {
   };
 
   renderCustomThemeView() {
-    const { customThemeViewVisible, onShowCustomThemeView } = this.props;
+    const { cutsomThemeViewVisiable, onShowCustomThemeView } = this.props;
     return (<CustomTheme
-      visible={customThemeViewVisible}
+      visible={cutsomThemeViewVisiable}
       {...this.props}
       onClose={() => onShowCustomThemeView(false)}
     />)
@@ -56,7 +56,7 @@ class HomePage extends Component {
 
 const mapStateToProps = state => ({
   nav: state.nav,
-  customThemeViewVisible: state.theme.customThemeViewVisible
+  cutsomThemeViewVisiable: state.theme.cutsomThemeViewVisiable
 });
 
 const mapDispatchToProps = dispatch => ({
