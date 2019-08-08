@@ -7,11 +7,13 @@
  */
 
 import React, { Component } from 'react';
-import { BackHandler } from 'react-native'
+import { View } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import DynamicTabNavigator from '../AppNavigators/DynamicTabNavigator';
 import { connect } from 'react-redux'
 import BackPressComponent from './../common/BackPressComponent'
+import CustomTheme from './CustomTheme'
+import actions from '../action';
 
 class HomePage extends Component {
   constructor(props) {
@@ -34,12 +36,31 @@ class HomePage extends Component {
     dispatch(NavigationActions.back());
     return true;
   };
+
+  renderCustomThemeView() {
+    const { customThemeViewVisible, onShowCustomThemeView } = this.props;
+    return (<CustomTheme
+      visible={customThemeViewVisible}
+      {...this.props}
+      onClose={() => onShowCustomThemeView(false)}
+    />)
+  }
+
   render() {
-    return <DynamicTabNavigator />
+    return <View style={{ flex: 1 }}>
+      <DynamicTabNavigator />
+      {this.renderCustomThemeView()}
+    </View>;
   }
 }
 
-const mapStateToProps = (state) => ({
-  nav: state.nav
+const mapStateToProps = state => ({
+  nav: state.nav,
+  customThemeViewVisible: state.theme.customThemeViewVisible
 });
-export default connect(mapStateToProps)(HomePage)
+
+const mapDispatchToProps = dispatch => ({
+  onShowCustomThemeView: (show) => dispatch(actions.onShowCustomThemeView(show)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

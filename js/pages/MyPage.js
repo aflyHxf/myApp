@@ -15,12 +15,15 @@ import MORE_MENU from '../common/MoreMenu';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import GlobalStyles from '../res/style/GlobalStyles';
 import { FLAG_LANGUAGE } from '../expand/Dao/LanguageDao';
+import actions from '../action';
+import { connect } from 'react-redux'
 
 const THEME_COLOR = '#678'
-export default class MyPage extends Component {
+class MyPage extends Component {
   constructor(props) {
     super(props)
   }
+
   onClick(menu) {
     let RouteName, params = {}
     switch (menu) {
@@ -31,6 +34,10 @@ export default class MyPage extends Component {
         break;
       case MORE_MENU.About:
         RouteName = 'AboutPage'
+        break;
+      case MORE_MENU.Custom_Theme:
+        const { onShowCustomThemeView } = this.props
+        onShowCustomThemeView(true);
         break;
       case MORE_MENU.Custom_Key:
       case MORE_MENU.Custom_Language:
@@ -71,7 +78,7 @@ export default class MyPage extends Component {
       <View style={GlobalStyles.appContainer}>
         {navigationBar}
         <ScrollView>
-          <TouchableOpacity onPress={() => { this.onClick(MORE_MENU.About) }} style={styles.item}>
+          <TouchableOpacity onPress={() => { MyPage.onClick(MORE_MENU.About) }} style={styles.item}>
             <View style={styles.aboutLeft}>
               <Ionicons name={MORE_MENU.About.icon} size={40} style={{ marginRight: 10, color: THEME_COLOR }} />
               <Text>Github Popular</Text>
@@ -113,6 +120,18 @@ export default class MyPage extends Component {
     );
   }
 }
+
+
+const mapStateToProps = state => ({
+  theme: state.theme.theme,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onShowCustomThemeView: (show) => dispatch(actions.onShowCustomThemeView(show)),
+});
+
+//注意：connect只是个function，并不应定非要放在export后面
+export default connect(mapStateToProps, mapDispatchToProps)(MyPage);
 
 const styles = StyleSheet.create({
   aboutLeft: {
