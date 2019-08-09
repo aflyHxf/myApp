@@ -153,7 +153,14 @@ class PopularTab extends React.Component {
             <PopularItem
                 theme={theme}
                 projectModel={item}
-                onSelect={(callback) => { NavigationUtil.goPage('DetailPage', { projectModel: item, flag: FLAG_STORAGE.flag_popular, callback }) }}
+                onSelect={(callback) => {
+                    NavigationUtil.goPage('DetailPage', {
+                        theme,
+                        projectModel: item,
+                        flag: FLAG_STORAGE.flag_popular,
+                        callback
+                    })
+                }}
                 onFavorite={(item, isFavorite) => FavoriteUtil.onFavorite(favoriteDao, item, isFavorite, FLAG_STORAGE.flag_popular)}
             />
         </View>
