@@ -49,9 +49,7 @@ export async function _projectModels(showItems, favoriteDao, callback) {
         projectModels.push(new ProjectModel(showItems[i], Utils.checkFavorite(showItems[i], keys)))
     }
 
-    if (typeof callback === 'function') {
-        callback(projectModels)
-    }
+    doCallback(callback, projectModels)
 }
 
 /**
@@ -73,4 +71,11 @@ export function commonFunc(dispatch, storeName, pageIndex, pageSize, dataArray, 
             projectModels
         })
     })
+}
+
+
+export function doCallback(callback, object) {
+    if (typeof callback === 'function') {
+        callback(object)
+    }
 }
