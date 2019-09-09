@@ -10,7 +10,7 @@ import ProjectModel from '../model/ProjectModel'
  * @param {*} favoriteDao 
  * @param {*} params 额外的参数 
  */
-export function handleData(actionType, dispatch, storeName, data, pageSize, favoriteDao,params) {
+export function handleData(actionType, dispatch, storeName, data, pageSize, favoriteDao, params) {
     let fixItems = []
     if (data && data.data) {
         if (Array.isArray(data.data)) {

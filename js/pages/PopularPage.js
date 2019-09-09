@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo } from 'react-native';
+import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, DeviceInfo, TouchableOpacity } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 import PopularItem from '../common/PopularItem'
@@ -21,6 +21,7 @@ import FavoriteUtil from '../util/FavoriteUtils';
 import EventBus from 'react-native-event-bus';
 import EventTypes from '../util/EventTypes';
 import { FLAG_LANGUAGE } from '../expand/Dao/LanguageDao';
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
 const URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STAR = '&sort=star'
@@ -53,21 +54,31 @@ class PopularPage extends Component {
         const { theme } = this.props
         return createAppContainer(createMaterialTopTabNavigator(
             this._renderTabs(), {
-                tabBarOptions: {
-                    tabStyle: styles.tabStyle,
-                    upperCaseLabel: false,//是否使标签大写，默认为true
-                    scrollEnabled: true,//是否支持 选项卡滚动，默认false
-                    style: {
-                        backgroundColor: theme.themeColor,//TabBar 的背景颜色
-                        height: 30//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
-                    },
-                    indicatorStyle: styles.indicatorStyle,//标签指示器的样式
-                    labelStyle: styles.labelStyle,//文字的样式
+            tabBarOptions: {
+                tabStyle: styles.tabStyle,
+                upperCaseLabel: false,//是否使标签大写，默认为true
+                scrollEnabled: true,//是否支持 选项卡滚动，默认false
+                style: {
+                    backgroundColor: theme.themeColor,//TabBar 的背景颜色
+                    height: 30//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
                 },
-                lazy: true
-            }))
+                indicatorStyle: styles.indicatorStyle,//标签指示器的样式
+                labelStyle: styles.labelStyle,//文字的样式
+            },
+            lazy: true
+        }))
     }
-
+    renderRightButton() {
+        const { theme } = this.props
+        return <TouchableOpacity
+            onPress={() => {
+                NavigationUtil.goPage('SearchPage', { theme })
+            }}>
+            <View style={{ padding: 5, marginRight: 8 }}>
+                <Ionicons name={'ios-search'} size={24} style={{ marginRight: 8, alignSelf: 'center', color: '#fff' }} />
+            </View>
+        </TouchableOpacity>
+    }
     render() {
         const { keys, theme } = this.props
         const statusBar = {
@@ -79,6 +90,7 @@ class PopularPage extends Component {
                 title={'最热'}
                 statusBar={statusBar}
                 style={theme.styles.navBar}
+                rightButton={this.renderRightButton()}
             />
         const TopNavigations = keys.length ? this._tabNav() : null
 

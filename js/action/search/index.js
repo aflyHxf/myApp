@@ -1,6 +1,7 @@
 import Types from '../types';
 import { handleData, commonFunc, doCallback } from '../ActionUtil';
 import ArrayUtil from '../../util/ArrayUtil'
+import Utils from '../../util/Utils';
 
 const API_URL = 'https://api.github.com/search/repositories?q=';
 const QUERY_STR = '&sort=stars';
@@ -34,7 +35,7 @@ export function onSearch(inputKey, pageSize, token, favoriteDao, popularKeys, ca
 
             let items = responseData.items;
             handleData(Types.SEARCH_REFRESH_SUCCESS, dispatch, '', { data: items }, pageSize, favoriteDao, {
-                showBottomButton: !checkKeyIsExist(popularKeys, inputKey),
+                showBottomButton: !Utils.checkKeyIsExist(popularKeys, inputKey),
                 inputKey
             })
         }).catch(e => {
@@ -77,7 +78,7 @@ export function onLoadMoreSearch(pageIndex, pageSize, dataArray = [], favoriteDa
                     pageIndex: pageIndex--
                 })
             } else {
-                commonFunc(dispatch, '', pageIndex, pageSize, dataArray, favoriteDao, Types.POPULAR_LOAD_MORE_SUCCESS)
+                commonFunc(dispatch, '', pageIndex, pageSize, dataArray, favoriteDao, Types.SEARCH_LOAD_MORE_SUCCESS)
             }
         }, 500)
     }
@@ -92,13 +93,6 @@ function hasCancel(token, isRemove) {
     if (CANCEL_TOKENS.includes(token)) {
         isRemove && ArrayUtil.remove(CANCEL_TOKENS, token)
         return true
-    }
-    return false
-}
-
-function checkKeyIsExist(keys, key) {
-    for (let i = 0, len = keys.length; i < len; i++) {
-        if (key.toLowerCase() === keys[i].name.toLowerCase()) return true
     }
     return false
 }

@@ -13,4 +13,11 @@ export default class Utils {
         }
         return false
     }
+
+    static checkKeyIsExist(keys, key) {
+        for (let i = 0, len = keys.length; i < len; i++) {
+            if (key.toLowerCase().trim() === keys[i].name.toLowerCase().trim()) return true
+        }
+        return false
+    }
 }

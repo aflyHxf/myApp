@@ -76,7 +76,7 @@ class MyPage extends Component {
         style={theme.styles.navBar}
       />
     return (
-      <View style={GlobalStyles.appContainer}>
+      <View style={GlobalStyles.root_container}>
         {navigationBar}
         <ScrollView>
           <TouchableOpacity onPress={() => { MyPage.onClick(MORE_MENU.About) }} style={styles.item}>

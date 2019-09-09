@@ -97,7 +97,7 @@ export default class DetailPage extends Component {
             rightButton={this.renderRightButton()}
             title={this.state.title}
             titleLayoutStyle={titleLayoutStyle}
-            style={theme.styles.theme}
+            style={theme.styles.navBar}
         />
         return (
             <View style={styles.container}>
