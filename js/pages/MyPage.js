@@ -24,7 +24,10 @@ class MyPage extends Component {
   }
 
   onClick(menu) {
-    let RouteName, params = {}
+    const { theme } = this.props
+    let RouteName, params = {
+      themeColor: theme.themeColor
+    }
     switch (menu) {
       case MORE_MENU.Tutorial:
         RouteName = 'WebViewPage'
@@ -79,7 +82,7 @@ class MyPage extends Component {
       <View style={GlobalStyles.root_container}>
         {navigationBar}
         <ScrollView>
-          <TouchableOpacity onPress={() => { MyPage.onClick(MORE_MENU.About) }} style={styles.item}>
+          <TouchableOpacity onPress={() => { this.onClick(MORE_MENU.About) }} style={styles.item}>
             <View style={styles.aboutLeft}>
               <Ionicons name={MORE_MENU.About.icon} size={40} style={{ marginRight: 10, color: theme.themeColor }} />
               <Text>Github Popular</Text>

@@ -95,7 +95,7 @@ class PopularPage extends Component {
         const TopNavigations = keys.length ? this._tabNav() : null
 
         return (
-            <View style={{ flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0 }}>
+            <View style={styles.container}>
                 {navigationBar}
                 {TopNavigations && <TopNavigations />}
             </View>
@@ -251,10 +251,7 @@ const PopularTabPage = connect(mapStateToProps, mapDispatchToProps)(PopularTab)
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        flex: 1
     },
     tabStyle: {
         padding: 0

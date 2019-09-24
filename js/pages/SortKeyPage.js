@@ -18,18 +18,18 @@ import ViewUtil from '../util/ViewUtil';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import ArrayUtil from '../util/ArrayUtil';
 import SortableListView from 'react-native-sortable-listview'
-
-const THEME_COLOR = '#678'
+import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
 
 class RowComponent extends React.Component {
     render() {
+        const { themeColor } = this.props
         return (
             <TouchableHighlight
                 underlayColor={'#eee'}
                 style={this.props.data.checked ? styles.item : styles.hidden}
                 {...this.props.sortHandlers}>
                 <View style={{ marginLeft: 10, flexDirection: 'row' }}>
-                    <MaterialCommunityIcons name={'sort'} size={16} style={{ marginRight: 10, color: THEME_COLOR }} />
+                    <MaterialCommunityIcons name={'sort'} size={16} style={{ marginRight: 10, color: themeColor }} />
                     <Text>{this.props.data.name}</Text>
                 </View>
             </TouchableHighlight>
@@ -168,29 +168,30 @@ class SortKeyPage extends Component {
     }
 
     render() {
+        const { themeColor } = this.params
         const title = this.params.flag === FLAG_LANGUAGE.flag_language ? '语言排序' : '标签排序'
         const order = this.state.checkedArray
         const navigationBar =
             <NavigationBar
                 title={title}
-                style={{ backgroundColor: THEME_COLOR }}
+                style={{ backgroundColor: themeColor }}
                 rightButton={SortKeyPage.getRightButtonText('保存', () => this.onSave())}
                 leftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
             />;
 
-        return <View style={styles.container}>
+        return <SafeAreaViewPlus style={styles.container} topColor={themeColor}>
             {navigationBar}
             <SortableListView
                 style={{ flex: 1 }}
                 data={order}
                 order={Object.keys(order)}
-                  onRowMoved={e => {
+                onRowMoved={e => {
                     this.state.checkedArray.splice(e.to, 0, this.state.checkedArray.splice(e.from, 1)[0])
                     this.forceUpdate()
                 }}
                 renderRow={row => <RowComponent data={row} {...this.params} />}
             />
-        </View>
+        </SafeAreaViewPlus>
     }
 }
 
@@ -205,8 +206,7 @@ export default connect(mapPopularStateToProps, mapPopularDispatchToProps)(SortKe
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#F5FCFF'
+        flex: 1
     },
     line: {
         height: 0.3,

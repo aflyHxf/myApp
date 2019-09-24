@@ -11,9 +11,11 @@ import BackPressComponent from '../../common/BackPressComponent'
  */
 const window = Dimensions.get('window');
 const AVATAR_SIZE = 90;
-const PARALLAX_HEADER_HEIGHT = 350;
+const PARALLAX_HEADER_HEIGHT = 270;
 const TOP = (Platform.OS === 'ios') ? 20 + (DeviceInfo.isIPhoneX_deprecated ? 24 : 0) : 0;
 const STICKY_HEADER_HEIGHT = (Platform.OS === 'ios') ? GlobalStyles.nav_bar_height_ios + TOP : GlobalStyles.nav_bar_height_android;
+
+
 export const FLAG_ABOUT = { flag_about: 'about', flag_about_me: 'about_me' }
 export default class AboutCommon {
     constructor(props, updateState) {

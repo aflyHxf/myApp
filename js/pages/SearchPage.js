@@ -7,7 +7,7 @@
  */
 
 import React from 'react';
-import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, TouchableOpacity, Platform, TextInput, SafeAreaViewPlus } from 'react-native';
+import { StyleSheet, Text, View, RefreshControl, FlatList, ActivityIndicator, TouchableOpacity, Platform, TextInput } from 'react-native';
 import Toast from 'react-native-easy-toast'
 import PopularItem from '../common/PopularItem'
 import { connect } from 'react-redux'
@@ -21,6 +21,8 @@ import BackPressComponent from '../common/BackPressComponent';
 import GlobalStyles from '../res/style/GlobalStyles';
 import ViewUtil from '../util/ViewUtil';
 import Utils from '../util/Utils';
+import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
+
 const pageSize = 10
 const favoriteDao = new FavoriteDao(FLAG_STORAGE.flag_popular)
 
@@ -151,7 +153,7 @@ class SearchPage extends React.Component {
         const { theme } = this.params
         let statusBar = null
         if (Platform.OS === 'ios') {
-            statusBar = <View style={[styles.statusBar, { backgroundColor: theme.themeColor }]} />
+            statusBar = <View style={{ backgroundColor: theme.themeColor }} />
         }
 
         let listView = !isLoading ?
@@ -199,13 +201,13 @@ class SearchPage extends React.Component {
             {listView}
         </View>
         return (
-            <View style={GlobalStyles.root_container}>
+            <SafeAreaViewPlus style={GlobalStyles.root_container} topColor={theme.themeColor}>
                 {statusBar}
                 {this.renderNavBar()}
                 {resultView}
                 {bottomButton}
                 <Toast ref={toast => this.toast = toast} />
-            </View>
+            </SafeAreaViewPlus>
         )
     }
 }
@@ -251,7 +253,7 @@ const styles = StyleSheet.create({
         margin: 10
     },
     statusBar: {
-        height: 25
+        height: 20
     },
     bottomButton: {
         position: 'absolute',

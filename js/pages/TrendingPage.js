@@ -102,19 +102,19 @@ class TrendingPage extends Component {
             this.theme = theme
             this.tabNav = createAppContainer(createMaterialTopTabNavigator(
                 this._genTabs(), {
-                    tabBarOptions: {
-                        tabStyle: styles.tabStyle,
-                        upperCaseLabel: false,//是否使标签大写，默认为true
-                        scrollEnabled: true,//是否支持 选项卡滚动，默认false
-                        style: {
-                            backgroundColor: theme.themeColor,//TabBar 的背景颜色
-                            height: 30//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
-                        },
-                        indicatorStyle: styles.indicatorStyle,//标签指示器的样式
-                        labelStyle: styles.labelStyle,//文字的样式
+                tabBarOptions: {
+                    tabStyle: styles.tabStyle,
+                    upperCaseLabel: false,//是否使标签大写，默认为true
+                    scrollEnabled: true,//是否支持 选项卡滚动，默认false
+                    style: {
+                        backgroundColor: theme.themeColor,//TabBar 的背景颜色
+                        height: 30//fix 开启scrollEnabled后再Android上初次加载时闪烁问题
                     },
-                    lazy: true
-                }
+                    indicatorStyle: styles.indicatorStyle,//标签指示器的样式
+                    labelStyle: styles.labelStyle,//文字的样式
+                },
+                lazy: true
+            }
             ));
         }
         return this.tabNav;
@@ -135,7 +135,7 @@ class TrendingPage extends Component {
             />
         const TopNavigations = keys.length ? this._tabNav() : null
         return (
-            <View style={{ flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0 }}>
+            <View style={styles.container}>
                 {navigationBar}
                 {TopNavigations && <TopNavigations />}
                 {this.randerTrendingDialog()}
@@ -310,10 +310,7 @@ const TrendingTabPage = connect(mapStateToProps, mapDispatchToProps)(TrendingTab
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
+        flex: 1
     },
     tabStyle: {
         padding: 0

@@ -15,6 +15,7 @@ import AboutCommon, { FLAG_ABOUT } from './AboutCommon';
 import config from '../../res/data/config'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Toast from 'react-native-easy-toast'
+// import SafeAreaViewPlus from '../../common/SafeAreaViewPlus';
 
 const THEME_COLOR = '#678'
 export default class AboutMePage extends Component {
@@ -90,6 +91,7 @@ export default class AboutMePage extends Component {
     }
 
     render() {
+        const { themeColor } = this.props
         const content = <View>
             {this._item(this.state.data.aboutMe.Tutorial, this.state.showTutorial, 'showTutorial')}
             <View style={GlobalStyles.line} />

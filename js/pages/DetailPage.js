@@ -14,6 +14,7 @@ import ViewUtil from '../util/ViewUtil';
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import NavigationUtil from '../AppNavigators/NavigationUtil';
 import FavoriteDao from '../expand/Dao/FavoriteDao';
+import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
 
 const TRENDING_URL = 'https"//github.com/'
 export default class DetailPage extends Component {
@@ -100,13 +101,13 @@ export default class DetailPage extends Component {
             style={theme.styles.navBar}
         />
         return (
-            <View style={styles.container}>
+            <SafeAreaViewPlus topColor={theme.themeColor}>
                 {navigationBar}
                 <WebView ref={webView => this.webView = webView}
                     startInLoadingState={true}
                     onNavigationStateChange={e => this.onNavigationStateChange(e)}
                     source={{ uri: this.state.url }} />
-            </View>
+            </SafeAreaViewPlus>
         );
     }
 }

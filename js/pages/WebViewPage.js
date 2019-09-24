@@ -7,18 +7,18 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, WebView, View, DeviceInfo } from 'react-native';
+import { StyleSheet, WebView } from 'react-native';
 import NavigationBar from '../common/NavigationBar'
 import BackPressComponent from '../common/BackPressComponent'
 import ViewUtil from '../util/ViewUtil';
 import NavigationUtil from '../AppNavigators/NavigationUtil';
-
-const THEME_COLOR = '#678'
+import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
 
 export default class WebViewPage extends Component {
   constructor(props) {
     super(props)
     this.params = this.props.navigation.state.params
+    this.themeColor = this.params.themeColor
     const { title, url } = this.params
     this.state = {
       title: title,
@@ -58,27 +58,27 @@ export default class WebViewPage extends Component {
   }
 
   render() {
+    const { themeColor } = this.params
     const navigationBar = <NavigationBar
       leftButton={ViewUtil.getLeftBackButton(() => this.onBackPress())}
       title={this.state.title}
-      style={{ backgroundColor: THEME_COLOR }}
+      style={{ backgroundColor: themeColor }}
     />
     return (
-      <View style={styles.container}>
+      <SafeAreaViewPlus style={styles.container} topColor={themeColor}>
         {navigationBar}
         <WebView ref={webView => this.webView = webView}
           startInLoadingState={true}
           onNavigationStateChange={e => this.onNavigationStateChange(e)}
           source={{ uri: this.state.url }}
         />
-      </View>
+      </SafeAreaViewPlus>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0
+    flex: 1
   }
 });

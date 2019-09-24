@@ -14,6 +14,7 @@ import MORE_MENU from '../../common/MoreMenu';
 import GlobalStyles from '../../res/style/GlobalStyles';
 import AboutCommon, { FLAG_ABOUT } from './AboutCommon';
 import config from '../../res/data/config'
+import SafeAreaViewPlus from '../../common/SafeAreaViewPlus';
 
 const THEME_COLOR = '#678'
 export default class AboutPage extends Component {
@@ -67,13 +68,14 @@ export default class AboutPage extends Component {
         return ViewUtil.getMenuItem(() => this.onClick(menu), menu, THEME_COLOR)
     }
     render() {
-        const content = <View>
+        const { themeColor } = this.props
+        const content = <SafeAreaViewPlus topColor={themeColor}>
             {this.getItem(MORE_MENU.Tutorial)}
             <View style={GlobalStyles.line} />
             {this.getItem(MORE_MENU.About_Author)}
             <View style={GlobalStyles.line} />
             {this.getItem(MORE_MENU.Feedback)}
-        </View>
+        </SafeAreaViewPlus>
         return this.aboutCommon.render(content, this.state.data.app)
     }
 }

@@ -7,7 +7,7 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, View, RefreshControl, FlatList, DeviceInfo } from 'react-native';
+import { StyleSheet, View, RefreshControl, FlatList } from 'react-native';
 import { createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
 import Toast from 'react-native-easy-toast'
 import PopularItem from '../common/PopularItem'
@@ -22,10 +22,9 @@ import TrendingItem from '../common/TrendingItem';
 import EventBus from 'react-native-event-bus';
 import EventTypes from '../util/EventTypes';
 
-export default class FavoritePage extends Component {
+class FavoritePage extends Component {
     constructor(props) {
         super(props)
-        this.tabName = ['最热', '趋势']
     }
 
     render() {
@@ -36,7 +35,7 @@ export default class FavoritePage extends Component {
         }
         const navigationBar =
             <NavigationBar
-                title={'最热'}
+                title={'收藏'}
                 statusBar={statusBar}
                 style={theme.styles.navBar}
             />
@@ -54,19 +53,19 @@ export default class FavoritePage extends Component {
                 }
             }
         }, {
-                tabBarOptions: {
-                    tabStyle: styles.tabStyle,
-                    upperCaseLabel: false,
-                    style: {
-                        backgroundColor: theme.themeColor,
-                        height: 30
-                    },
-                    indicatorStyle: styles.indicatorStyle,
-                    labelStyle: styles.labelStyle
-                }
-            }))
+            tabBarOptions: {
+                tabStyle: styles.tabStyle,
+                upperCaseLabel: false,
+                style: {
+                    backgroundColor: theme.themeColor,//TabBar 的背景颜色
+                    height: 30
+                },
+                indicatorStyle: styles.indicatorStyle,
+                labelStyle: styles.labelStyle
+            }
+        }))
         return (
-            <View style={{ flex: 1, marginTop: DeviceInfo.isIPhoneX_deprecated ? 30 : 0 }}>
+            <View style={styles.container}>
                 {navigationBar}
                 <TopNavigations />
             </View>
@@ -74,6 +73,11 @@ export default class FavoritePage extends Component {
     }
 }
 
+const mapFavoriteStateToProps = state => ({
+    theme: state.theme.theme,
+});
+//注意：connect只是个function，并不应定非要放在export后面
+export default connect(mapFavoriteStateToProps)(FavoritePage);
 
 class FavoriteTab extends React.Component {
     constructor(props) {
@@ -146,7 +150,7 @@ class FavoriteTab extends React.Component {
 
     render() {
         let store = this._store();
-        const { theme } = this.props
+        const { theme } = this.props;
         return (
             <View style={styles.container}>
                 <FlatList data={store.projectModels}
@@ -154,9 +158,9 @@ class FavoriteTab extends React.Component {
                     keyExtractor={item => '' + (item.item.id || item.item.fullName)}
                     refreshControl={
                         <RefreshControl
-                            title={'loading'}
+                            title={'Loading'}
                             titleColor={theme.themeColor}
-                            colors={theme.themeColor}
+                            colors={[theme.themeColor]}
                             refreshing={store.isLoading}
                             onRefresh={() => this.loadData(true)}
                             tintColor={theme.themeColor}
@@ -171,7 +175,7 @@ class FavoriteTab extends React.Component {
 
 const mapStateToProps = state => ({
     favorite: state.favorite,
-    theme: state.theme.theme
+    theme: state.theme,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -182,8 +186,7 @@ const FavoriteTabPage = connect(mapStateToProps, mapDispatchToProps)(FavoriteTab
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#F5FCFF',
+        flex: 1
     },
     tabStyle: {
         padding: 0

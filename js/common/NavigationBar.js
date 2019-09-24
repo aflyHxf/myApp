@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { ViewPropTypes, View, StatusBar, Text, StyleSheet, Platform } from 'react-native';
+import { ViewPropTypes, View, StatusBar, Text, StyleSheet, Platform, DeviceInfo } from 'react-native';
 
 const NAV_BAR_HEIGHT_IOS = 44 // 导航栏在ios中的高度
 const NAV_BAR_HEIGHT_ANDROID = 50 // 导航栏在Android中的高度
-const STATUS_BAR_HEIGHT = 20 // 状态栏的高度
+const STATUS_BAR_HEIGHT = DeviceInfo.isIPhoneX_deprecated ? 0 : 20 // 状态栏的高度
 
 const StatusBarShape = { // 设置状态栏所接受的属性
     barStyle: PropTypes.oneOf(['light-content', 'default']),

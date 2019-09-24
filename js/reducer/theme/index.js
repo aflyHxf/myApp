@@ -6,7 +6,6 @@ const defaultState = {
     cutsomThemeViewVisiable: false,
 };
 export default function onAction(state = defaultState, action) {
-    console.log(action)
     switch (action.type) {
         case Types.THEME_CHANGE:
             return {

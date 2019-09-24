@@ -18,7 +18,7 @@ import ViewUtil from '../util/ViewUtil';
 import CheckBox from 'react-native-check-box'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import ArrayUtil from '../util/ArrayUtil';
-const THEME_COLOR = '#678'
+import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
 
 class CustomKeyPage extends Component {
     constructor(props) {
@@ -143,10 +143,10 @@ class CustomKeyPage extends Component {
 
     }
     _checkedImage(checked) {
-        const { } = this.params
+        const { themeColor } = this.params
         return <Ionicons
             name={checked ? 'ios-checkbox' : 'md-square-outline'}
-            size={20} style={{ color: THEME_COLOR }} />
+            size={20} style={{ color: themeColor }} />
     }
     renderCheckBox(data, index) {
         return <CheckBox
@@ -178,22 +178,23 @@ class CustomKeyPage extends Component {
     }
 
     render() {
+        const { themeColor } = this.params
         let title = this.isRemoveKey ? '标签移除' : '自定义标签'
         title = this.params.flag === FLAG_LANGUAGE.flag_language ? '自定义语言' : title
         const rightButtonText = this.isRemoveKey ? '移除' : '保存'
         const navigationBar =
             <NavigationBar
                 title={title}
-                style={{ backgroundColor: THEME_COLOR }}
+                style={{ backgroundColor: themeColor }}
                 rightButton={CustomKeyPage.getRightButtonText(rightButtonText, () => this.onSave())}
                 leftButton={ViewUtil.getLeftBackButton(() => this.onBack())}
             />;
-        return <View style={styles.container}>
+        return <SafeAreaViewPlus style={styles.container} topColor={themeColor}>
             {navigationBar}
             <ScrollView>
                 {this.renderView()}
             </ScrollView>
-        </View>
+        </SafeAreaViewPlus>
     }
 }
 
@@ -208,8 +209,7 @@ export default connect(mapPopularStateToProps, mapPopularDispatchToProps)(Custom
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#F5FCFF'
+        flex: 1
     },
     item: {
         flexDirection: 'row'

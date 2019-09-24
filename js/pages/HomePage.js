@@ -7,13 +7,13 @@
  */
 
 import React, { Component } from 'react';
-import { View } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 import DynamicTabNavigator from '../AppNavigators/DynamicTabNavigator';
 import { connect } from 'react-redux'
 import BackPressComponent from './../common/BackPressComponent'
 import CustomTheme from './CustomTheme'
 import actions from '../action';
+import SafeAreaViewPlus from './../common/SafeAreaViewPlus'
 
 class HomePage extends Component {
   constructor(props) {
@@ -47,15 +47,17 @@ class HomePage extends Component {
   }
 
   render() {
-    return <View style={{ flex: 1 }}>
+    const { theme } = this.props
+    return <SafeAreaViewPlus topColor={theme.themeColor}>
       <DynamicTabNavigator />
       {this.renderCustomThemeView()}
-    </View>;
+    </SafeAreaViewPlus>;
   }
 }
 
 const mapStateToProps = state => ({
   nav: state.nav,
+  theme: state.theme.theme,
   cutsomThemeViewVisiable: state.theme.cutsomThemeViewVisiable
 });
 
