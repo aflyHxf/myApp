@@ -7,10 +7,10 @@
  */
 
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import NavigationUtil from '../AppNavigators/NavigationUtil';
 import { connect } from 'react-redux';
 import actions from '../action';
+import SplashScreen from 'react-native-splash-screen'
 
 class WelcomePage extends Component {
   componentDidMount() {
@@ -18,6 +18,7 @@ class WelcomePage extends Component {
     NavigationUtil.initNavigation(navigation)
     this.props.onThemeInit()
     this.timer = setTimeout(() => {
+      SplashScreen.hide();
       NavigationUtil.resetToHomePage()
     }, 200)
   }
@@ -26,11 +27,7 @@ class WelcomePage extends Component {
     this.timer && clearTimeout(this.timer)
   }
   render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>WelcomePage!</Text>
-      </View>
-    );
+    return null
   }
 }
 
@@ -39,16 +36,3 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(null, mapDispatchToProps)(WelcomePage);
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10
-  }
-});
