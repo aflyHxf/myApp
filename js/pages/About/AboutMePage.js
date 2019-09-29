@@ -91,7 +91,6 @@ export default class AboutMePage extends Component {
     }
 
     render() {
-        const { themeColor } = this.props
         const content = <View>
             {this._item(this.state.data.aboutMe.Tutorial, this.state.showTutorial, 'showTutorial')}
             <View style={GlobalStyles.line} />
