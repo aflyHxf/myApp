@@ -15,8 +15,6 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import NavigationUtil from '../AppNavigators/NavigationUtil';
 import FavoriteDao from '../expand/Dao/FavoriteDao';
 import SafeAreaViewPlus from '../common/SafeAreaViewPlus';
-import share from '../res/data/share.json'
-import ShareUtil from '../util/ShareUtil'
 
 const TRENDING_URL = 'https"//github.com/'
 export default class DetailPage extends Component {
@@ -78,10 +76,6 @@ export default class DetailPage extends Component {
                 <FontAwesome name={this.state.isFavorite ? 'star' : 'star-o'} size={20}
                     style={{ color: '#fff', marginRight: 10 }} />
                 {ViewUtil.getShareButton(() => {
-                    let shareApp = share.share_app
-                    ShareUtil.shareboard(shareApp.content, shareApp.imgUrl, this.url, shareApp.title, [0, 1, 2, 3, 4, 5, 6], (code, message) => {
-                        console.log("result:" + code + message);
-                    });
                 })}
             </TouchableOpacity>
         </View>
